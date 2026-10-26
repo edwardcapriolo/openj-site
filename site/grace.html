@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Grace tokenizer and prompt-processing tools for the JVM.">
+  <title>Grace — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>Practical, reusable tools for exploring AI from Java, Groovy, and the wider JVM.</p>
+      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="inferj.html">InferJ</a><span class="nav-label">InferJ Tools</span><a class="active" href="grace.html">Grace</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/sketches">Sketches ↗</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">InferJ Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / GRACE TOKENIZERS</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Grace</span><span>Language at token speed</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">InferJ component / 01</div>
+          <h1>Give your application the input your model expects.</h1>
+          <p class="lede">Before a model can answer, it needs your text translated into its own language of tokens. Grace handles that translation for the JVM, including the model-specific details that can change the result.</p>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="start">Start with the model you want to use</h2>
+            <p>Grace loads the tokenizer that belongs to a model. That matters because different model families split text, represent control tokens, and format conversations differently.</p>
+            <p>For supported families, Grace strives to match the results of the popular upstream Transformers implementations while presenting the workflow in an idiomatic Java style.</p>
+
+            <h2>Load a tokenizer</h2>
+            <p>Load a tokenizer by specifying its owner and model name:</p>
+            <pre><code>PreTrainedTokenizer tokenizer = AutoTokenizer.fromPretrained(
+    new AutoTokenizer.OwnerNameOrPath(
+        new AutoTokenizer.OwnerName("google", "gemma-4-E2B-it")
+    )
+);</code></pre>
+
+            <h2 id="encoding">See what the model sees</h2>
+            <p>Encoding turns ordinary text into the numeric input IDs passed to the model. Decoding turns those IDs back into text, so you can inspect the round trip while building or debugging an application:</p>
+            <pre><code>Encoding encoding = tokenizer.encode("Hello world");
+int[] ids = encoding.inputIds();
+
+String decoded = tokenizer.decode(
+    new TokenIds(ids),
+    false,
+    false,
+    false,
+    false
+);</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> "Hello world"</div>
+            <p>The decoded text comes back as <code>Hello world</code>. The numeric IDs are specific to the tokenizer and model, which is why using the right tokenizer matters.</p>
+
+            <h2 id="control">Keep the model’s control language intact</h2>
+            <p>Models use special tokens to mark things like the beginning and end of a sequence. Grace gives your application access to those values instead of hiding them behind a generic string API:</p>
+            <pre><code>tokenizer.specialTokensMap();
+tokenizer.allSpecialTokens();
+tokenizer.allSpecialIds();
+tokenizer.bosTokenId();
+tokenizer.eosTokenId();</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> the model’s special-token map, token names, IDs, beginning-of-sequence ID, and end-of-sequence ID</div>
+
+            <h2 id="chat">Use chat templates instead of hand-building prompts</h2>
+            <p>When a model includes a chat template, Grace loads it with the tokenizer so your application can follow the model family’s expected conversation format:</p>
+            <pre><code>String template = tokenizer.chatTemplate().orElseThrow();</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> the model’s chat-template definition</div>
+
+            <h2 id="fetch">Download tokenizer data without model weights</h2>
+            <p><code>TokenizerModelFetcher</code> uses the same cache root as model fetching:</p>
+            <pre><code>~/.deliverance/&lt;owner&gt;_&lt;model&gt;/</code></pre>
+            <p>Tokenizer-only fetches download assets such as <code>tokenizer.json</code>, <code>tokenizer_config.json</code>, <code>vocab.json</code>, <code>merges.txt</code>, <code>chat_template.jinja</code>, and <code>config.json</code>. They do not download model weights, and local directories can be reused offline when the required files are present.</p>
+
+            <h2 id="families">Different families, different behavior</h2>
+            <p>Grace dispatches tokenizer families instead of forcing every model through one implementation. Current paths include:</p>
+            <ul><li>Gemma-style tokenizers</li><li>Byte-level BPE tokenizers</li><li>Qwen tokenizer paths</li><li>Bert tokenizer paths</li></ul>
+            <div class="note"><p><strong>When to use Grace:</strong> Choose it when you need Hugging Face-like behavior, chat template parity, and modern added and special token handling.</p></div>
+            <h2 id="gemma">Especially useful for Gemma 4</h2>
+            <p>For model families such as Gemma 4, prompt-control tokenization can have a major effect on generation quality. Grace makes those boundaries visible and usable from the JVM.</p>
+          </article>
+          <aside class="toc"><strong>Grace</strong><a href="#start">Choose a model</a><a href="#encoding">See the input</a><a href="#control">Control tokens</a><a href="#chat">Chat templates</a><a href="#fetch">Fetching</a><a href="#families">Model families</a><a href="#gemma">Gemma 4</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Grace / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

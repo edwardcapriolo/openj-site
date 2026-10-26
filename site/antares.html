@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Antares vulnerability localization running locally with InferJ.">
+  <title>Antares — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>Practical, reusable tools for exploring AI from Java, Groovy, and the wider JVM.</p>
+      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="inferj.html">InferJ</a><span class="nav-label">InferJ Tools</span><a href="grace.html">Grace</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/sketches">Sketches ↗</a><a class="active" href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">InferJ Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / ANTARES SECURITY TOOLS</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Antares</span><span>Investigate code locally</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">InferJ component / 02</div>
+          <h1>Give a small model a codebase to investigate.</h1>
+          <p class="lede">Antares uses a local model to locate likely vulnerabilities in a repository. It searches, reads, and reports exact file paths while asking before it runs terminal commands.</p>
+          <div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/deliverance/tree/main/deliverance-antares-cli">View the source ↗</a><a class="button ghost" href="#demo">See the investigation</a></div>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="demo">A security investigation, not a chatbot</h2>
+            <p>Point Antares at a repository and give it a vulnerability pattern to look for. The model uses terminal-style tools to explore the code, then returns the files it believes are vulnerable.</p>
+            <pre><code>./deliverance-antares-cli/run-server-antares-1b.sh
+
+./deliverance-antares-cli/run-showcase-cwe78.sh</code></pre>
+            <div class="example-output"><strong>&gt;&gt; investigates</strong> a local repository for CWE-78 command injection</div>
+
+            <h2 id="tools">Watch the reasoning move</h2>
+            <p>Antares keeps the investigation visible. You can see the search, inspect the file it found, and approve each command before it runs:</p>
+            <pre><code>[tool] terminal rg -n "\.exec\(" .
+[approval] y/N: y
+[result]
+./src/main/java/demo/ArchiveController.java:8:
+    return Runtime.getRuntime().exec(command);
+
+[tool] read_file src/main/java/demo/ArchiveController.java
+[tool] submit_vulnerable_files</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> [src/main/java/demo/ArchiveController.java]</div>
+
+            <h2 id="question">Start with a question</h2>
+            <p>The direct command lets you provide a repository, model, CWE, and plain-language investigation query:</p>
+            <pre><code>java -jar "$(sh deliverance-antares-cli/resolve_antares_cli_jar.sh)" \
+  --repo path/to/repository \
+  --endpoint http://127.0.0.1:18085/v1 \
+  --model antares-1b-JQ4 \
+  --cwe CWE-78 \
+  --query "Look for user-controlled input reaching Runtime.exec, ProcessBuilder, shell commands, or command string concatenation." \
+  --max-tool-calls 4</code></pre>
+
+            <h2 id="approval">Keep the airlock visible</h2>
+            <p>By default, Antares asks for approval before every terminal or bash command. Say <code>n</code> when a command is not appropriate. Unattended mode belongs inside a sandbox or container:</p>
+            <pre><code>./deliverance-antares-cli/run-showcase-cwe78.sh \
+  --yes-run-commands</code></pre>
+            <div class="note"><p><strong>Local by design:</strong> the model can inspect sensitive source code through a local InferJ server instead of sending the repository to a hosted API.</p></div>
+
+            <h2 id="results">What Antares returns</h2>
+            <p>Antares is focused on vulnerability localization: finding the files that deserve attention. It validates repository-relative paths and rejects globs, directories, missing files, absolute paths, and parent traversal.</p>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> a ranked list of exact vulnerable file paths and a short summary</div>
+
+            <h2 id="local">Built for local experiments</h2>
+            <p>The module runs an Antares-style workflow against an OpenAI-compatible InferJ completions endpoint. It streams output, keeps tool calls visible, and includes a small local smoke benchmark for comparing submitted files with expected vulnerable files.</p>
+          </article>
+          <aside class="toc"><strong>Antares</strong><a href="#demo">The investigation</a><a href="#tools">Live tool use</a><a href="#question">Ask a question</a><a href="#approval">The airlock</a><a href="#results">Results</a><a href="#local">Local experiments</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Antares / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

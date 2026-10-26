@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="JQ4 quantized tensor support for local JVM inference.">
+  <title>JQ4 Tensors — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>Practical, reusable tools for exploring AI from Java, Groovy, and the wider JVM.</p>
+      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="inferj.html">InferJ</a><span class="nav-label">InferJ Tools</span><a href="grace.html">Grace</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/sketches">Sketches ↗</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">InferJ Components</span><a class="active" href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / JQ4 TENSOR FORMAT</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / JQ4</span><span>More model in less memory</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">InferJ component / 02</div>
+          <h1>Make local models fit the machine.</h1>
+          <p class="lede">JQ4 is InferJ’s safetensors-friendly 4-bit tensor layout. It reduces the storage and memory cost of the largest model weights while keeping the model directory familiar.</p>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="why">Why 4-bit weights?</h2>
+            <p>Large language models are mostly large arrays of numbers. Storing selected weights in four bits uses less disk space and less memory bandwidth, making local inference more practical on ordinary hardware.</p>
+            <p>JQ4 is designed for InferJ’s tensor engines and keeps the surrounding Hugging Face-style model files in place. It is a quantized layout for the JVM, not a replacement for the model’s configuration or tokenizer.</p>
+
+            <h2 id="pair">One weight, two pieces</h2>
+            <p>A quantized weight is stored as packed 4-bit values plus a matching scale sidecar. The scales let the runtime reconstruct an approximation of the original floating-point values during matrix operations:</p>
+            <pre><code>model.layers.0.self_attn.q_proj.weight
+  packed 4-bit values
+
+model.layers.0.self_attn.q_proj.weight.qb
+  per-block scale data</code></pre>
+            <div class="example-output"><strong>&gt;&gt; runtime reads</strong> the packed values and their matching scale blocks as one Q4 weight</div>
+
+            <h2 id="model">Keep the model directory familiar</h2>
+            <p>A JQ4 model still looks like a normal model directory:</p>
+            <pre><code>config.json
+tokenizer.json
+tokenizer_config.json
+model.safetensors
+model.safetensors.index.json
+README.md
+
+# generated during quantization
+deliverance-quantization.json
+.finished</code></pre>
+            <p>The manifest records the source and output paths, dtype changes, generated sidecars, and shape transforms so the conversion remains inspectable.</p>
+
+            <h2 id="policy">Quantize the expensive parts</h2>
+            <p>JQ4’s default policy focuses on the large attention and MLP projection matrices:</p>
+            <ul><li>Query, key, value, and output attention projections</li><li>MLP gate, up, and down projections</li><li>Large matrix-shaped weights that dominate storage and memory traffic</li></ul>
+            <p>Embeddings, normalization weights, small vectors, and other sensitive tensors remain dense by default. This is a deliberate balance: capture most of the size and bandwidth benefit without making every tensor lossy.</p>
+
+            <h2 id="measure">See what the runtime used</h2>
+            <p>Profile counters show which dtype path was actually used during a run:</p>
+            <pre><code>[profile-counter] sampler.output_weight_Q4 count=256
+[profile-counter] mlpblock.down_input_F32 count=9216</code></pre>
+            <div class="example-output"><strong>&gt;&gt; tells you</strong> where Q4 weights are active and where the runtime remains dense</div>
+
+            <div class="note"><p><strong>JQ4 in one sentence:</strong> keep the model format familiar, compress the weights that matter most, and let InferJ use them directly.</p></div>
+          </article>
+          <aside class="toc"><strong>JQ4</strong><a href="#why">Why 4-bit</a><a href="#pair">Weight pairs</a><a href="#model">Model files</a><a href="#policy">Quantization policy</a><a href="#measure">Measure the runtime</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>JQ4 / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

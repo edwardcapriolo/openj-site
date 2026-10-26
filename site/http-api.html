@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The InferJ HTTP chat API for applications, tools, and streaming responses.">
+  <title>HTTP API — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>Practical, reusable tools for exploring AI from Java, Groovy, and the wider JVM.</p>
+      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="inferj.html">InferJ</a><span class="nav-label">InferJ Tools</span><a href="grace.html">Grace</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/sketches">Sketches ↗</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">InferJ Components</span><a href="jq4.html">JQ4 tensors</a><a class="active" href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / HTTP API</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / HTTP API</span><span>Use InferJ from anywhere</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">InferJ component / 03</div>
+          <h1>Put a local model behind a familiar API.</h1>
+          <p class="lede">The InferJ HTTP API maps standard chat-completion requests onto the same engine used by Java callers, so applications and tools can use a running local model without embedding the runtime.</p>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="request">Send a chat request</h2>
+            <p>Send messages to <code>/chat/completions</code> using the format familiar from OpenAI-compatible clients:</p>
+            <pre><code>POST /chat/completions
+Content-Type: application/json
+
+{
+  "model": "your-local-model",
+  "messages": [
+    {"role": "user", "content": "Explain this Java method."}
+  ],
+  "temperature": 0.2,
+  "max_tokens": 200
+}</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> a chat completion response, or a stream of response events</div>
+
+            <h2 id="messages">Let the model format the conversation</h2>
+            <p>Your application sends messages, not a hand-built prompt. InferJ uses the tokenizer and chat template for the selected model family to turn those messages into the format the model expects.</p>
+            <pre><code>messages[]
+  -&gt; model chat template
+  -&gt; tokenizer
+  -&gt; generation loop
+  -&gt; chat completion</code></pre>
+            <p>Llama, Gemma, Qwen, and other model families do not share one universal conversation format. The API keeps that difference inside the runtime.</p>
+
+            <h2 id="controls">Control the generation</h2>
+            <p>Request-time parameters change how a response is generated without changing model weights or rebuilding the model:</p>
+            <ul><li><code>temperature</code> and <code>top_p</code> for sampling</li><li><code>max_tokens</code> to limit the response</li><li><code>seed</code> for repeatable runs</li><li><code>stop</code> to stop at chosen sequences</li><li><code>logprobs</code> and <code>top_logprobs</code> for token probabilities</li></ul>
+
+            <h2 id="guided">Ask for a shape, not just text</h2>
+            <p>Guided decoding fields let you constrain the generated result when an application needs a predictable format:</p>
+            <pre><code>{
+  "guided_regex": "TICKET-[0-9]{4}"
+}</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> text matching <code>TICKET-0000</code> through <code>TICKET-9999</code></div>
+            <pre><code>{
+  "guided_json": {
+    "type": "object",
+    "properties": {
+      "name": {"type": "string"},
+      "age": {"type": "integer"}
+    },
+    "required": ["name", "age"],
+    "additionalProperties": false
+  }
+}</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> a JSON object with exactly the requested fields</div>
+
+            <h2 id="stream">Watch long responses arrive</h2>
+            <p>Streaming chat completions use server-sent events. Applications can display generated text as it arrives, and tool-call or reasoning deltas are exposed where the model and API support them.</p>
+
+            <h2 id="tools">Connect tools</h2>
+            <p>Tool requests from the model are mapped into InferJ prompt-tool objects and parsed back from model output by the appropriate model-family tool parser. This is the bridge between a local model and workflows such as Antares or Nanocode.</p>
+            <div class="note"><p><strong>The point:</strong> use Java APIs when you want the engine inside your application; use the HTTP API when you want any compatible client or tool to talk to a local InferJ server.</p></div>
+          </article>
+          <aside class="toc"><strong>HTTP API</strong><a href="#request">Send a request</a><a href="#messages">Messages</a><a href="#controls">Generation controls</a><a href="#guided">Guided output</a><a href="#stream">Streaming</a><a href="#tools">Tool calls</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>HTTP API / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>
