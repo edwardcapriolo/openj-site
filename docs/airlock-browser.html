@@ -40,13 +40,15 @@ chromium --headless --no-sandbox --disable-gpu \
             <figure class="browser-capture"><img src="assets/openj-browser-capture.png" alt="Rendered OpenJ homepage showing a dark sidebar, off-white page, and oversized lime and black typography"><figcaption>The rendered OpenJ homepage, captured from the browser session.</figcaption></figure>
 
             <h2 id="colors">Read the palette</h2>
-            <p>The page uses a deliberately small palette. The contrast comes from a near-black navigation rail against an off-white canvas, with lime and olive green carrying the OpenJ signal.</p>
-            <div class="project-grid">
-              <div class="project-card"><div class="project-meta"><span>Canvas</span><span>#f1f0eb</span></div><div><h3>Warm off-white</h3><p>The main surface keeps the page quiet so the type and structure do the work.</p></div></div>
-              <div class="project-card"><div class="project-meta"><span>Structure</span><span>#101214</span></div><div><h3>Near-black</h3><p>The sidebar and primary button create a strong frame and anchor the navigation.</p></div></div>
-              <div class="project-card"><div class="project-meta"><span>Signal</span><span>#d9ff3f</span></div><div><h3>Lime accent</h3><p>The brightest color marks active navigation, the brand mark, and interaction states.</p></div></div>
-              <div class="project-card"><div class="project-meta"><span>Headings</span><span>#5d7600</span></div><div><h3>Olive green</h3><p>The large hero emphasis and small labels use a darker signal for readable contrast.</p></div></div>
-            </div>
+            <p>The agent inspected the screenshot and reported what it found:</p>
+            <pre><code>[agent / screenshot analysis]
+&gt;&gt; The page uses a deliberately small palette.
+&gt;&gt; Canvas: #f1f0eb, a warm off-white surface.
+&gt;&gt; Structure: #101214, a near-black navigation rail and button color.
+&gt;&gt; Signal: #d9ff3f, the bright lime used for active states and the brand mark.
+&gt;&gt; Headings: #5d7600, a darker olive green for emphasis.
+&gt;&gt; Contrast: the dark rail frames the quiet canvas while lime and olive carry the OpenJ signal.</code></pre>
+            <div class="example-output"><strong>&gt;&gt; agent</strong> palette extracted from the rendered screenshot</div>
 
             <h2 id="style">Read the style</h2>
             <p>Chromium makes the design language obvious: a fixed left rail, oversized editorial typography, monospace metadata, thin rules, and a circular technical motif in the hero. The layout feels like a field notebook for systems work rather than a generic product landing page.</p>
