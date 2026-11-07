@@ -12,7 +12,7 @@
     <aside class="sidebar">
       <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
        <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
-       <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a class="active" href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a href="classification.html">Classification</a><span class="nav-label">Reckoning Tools</span><a href="grace.html">Grace</a><a href="sketches.html">Sketches</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><span class="nav-label">Airlock</span><a class="nav-section-link" href="airlock.html">Overview</a><a class="nav-child" href="airlock-devel.html">Devel</a><a class="nav-child" href="airlock-cdevel.html">CDevel</a><a class="nav-child" href="airlock-browser.html">Browser</a><a class="nav-child" href="airlock-cloudops.html">CloudOps</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+       <nav class="nav" aria-label="Primary navigation"><a class="" href="index.html">Start here</a><a class="active" href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a class="" href="classification.html">Classification</a><a class="" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a class="" href="grace.html">Grace</a><a class="" href="sketches.html">Sketches</a><a class="" href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a class="" href="jq4.html">JQ4 tensors</a><a class="" href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-section-link " href="airlock.html">Overview</a><a class="nav-child " href="airlock-devel.html">Devel</a><a class="nav-child " href="airlock-cdevel.html">CDevel</a><a class="nav-child " href="airlock-browser.html">Browser</a><a class="nav-child " href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child " href="metrics-influx.html">Metrics Influx</a><a class="nav-child " href="gossip.html">Gossip</a><a class="nav-child " href="dysfx.html">Dysfx</a></details><a class="" href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
       <div class="sidebar-foot">OPENJ / RECKONING RUNTIME</div>
     </aside>
     <main class="main">
@@ -26,12 +26,22 @@
         <div class="article-layout">
           <article class="article">
             <h2 id="quickstart">A first look</h2>
-            <p>Reckoning is designed to cover the path from a small experiment to an embedded or HTTP-served model. The same project can expose generation, embeddings, and classification while keeping the runtime close enough to inspect.</p>
-            <pre><code>try (AbstractModel model = AutoModelForCausalLm.newBuilder(fetch).build()) {
-  Response response = model.generate(prompt);
-  System.out.println(response.responseText);
+             <p>Start with a small question. Reckoning loads a local model, sends it a prompt, and gives your Java application the answer:</p>
+             <pre><code>ModelFetcher fetch = new ModelFetcher(
+    "edwardcapriolo", "Qwen3-0.6B-JQ4");
+
+try (AbstractModel model = AutoModelForCausalLm
+        .newBuilder(fetch).build()) {
+    PromptContext prompt = model.promptSupport().orElseThrow()
+        .builder()
+        .addUserMessage("Tell me one food you like.")
+        .build();
+
+    Response response = model.generate(prompt);
+    System.out.println(response.responseText);
 }</code></pre>
-             <div class="note"><p><strong>Prototype note:</strong> This page is the new home for the material currently living under the Deliverance inference-engine documentation.</p></div>
+             <div class="example-output"><strong>&gt;&gt; returns</strong> pizza</div>
+             <p>That is the small version. To see more advanced use cases, read the <a href="thinking.html">Thinking capability</a>, where Reckoning exposes model reasoning, final answers, and benchmark metrics.</p>
              <h2>What it can do</h2>
             <div class="project-grid">
               <div class="project-card"><div class="project-meta"><span>Generation</span><span>01</span></div><p>Generate text from local quantized models with Java APIs and streaming callbacks.</p></div>
@@ -47,7 +57,7 @@
             <h2>Keep going</h2>
             <p>Next, the docs should make the route explicit: <a href="https://github.com/edwardcapriolo/deliverance/blob/main/build.md">build it</a>, <a href="https://github.com/edwardcapriolo/deliverance">run an example</a>, then follow the internals when you want to go deeper.</p>
           </article>
-            <aside class="toc"><strong>On this page</strong><a href="#quickstart">A first look</a><a href="#quickstart">Capabilities</a><a href="#quickstart">Next steps</a></aside>
+            <aside class="toc"><strong>On this page</strong><a href="#quickstart">A first look</a><a href="#classification">Classification</a><a href="thinking.html">Thinking</a></aside>
         </div>
       </div>
       <footer class="footer"><span>Reckoning / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>

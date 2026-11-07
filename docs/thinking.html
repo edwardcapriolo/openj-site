@@ -1,81 +1,78 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Thinking — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p><nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a href="classification.html">Classification</a><a class="active" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a href="grace.html">Grace</a><a href="sketches.html">Sketches</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-child" href="airlock.html">Overview</a><a class="nav-child" href="airlock-devel.html">Devel</a><a class="nav-child" href="airlock-cdevel.html">CDevel</a><a class="nav-child" href="airlock-browser.html">Browser</a><a class="nav-child" href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child" href="metrics-influx.html">Metrics Influx</a><a class="nav-child" href="gossip.html">Gossip</a><a class="nav-child" href="dysfx.html">Dysfx</a></details><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav><div class="sidebar-foot">OPENJ / RECKONING THINKING</div></aside><main class="main"><div class="topline"><span>OpenJ / Reckoning / Thinking</span><span>Make reasoning inspectable</span></div><div class="page article-page"><header class="article-head"><h1>Let a thinking model show its work.</h1><p class="lede">A Qwen3-4B-JQ4 benchmark run with visible reasoning, final answers, token counts, timing, and pass/fail results.</p></header><div class="article-layout"><article class="article">
-<h2 id="square">Square area</h2><pre><code>[prompt]
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Thinking and reasoning model support in Reckoning.">
+  <title>Thinking — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      <nav class="nav" aria-label="Primary navigation"><a class="" href="index.html">Start here</a><a class="" href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a class="" href="classification.html">Classification</a><a class="active" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a class="" href="grace.html">Grace</a><a class="" href="sketches.html">Sketches</a><a class="" href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a class="" href="jq4.html">JQ4 tensors</a><a class="" href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-section-link " href="airlock.html">Overview</a><a class="nav-child " href="airlock-devel.html">Devel</a><a class="nav-child " href="airlock-cdevel.html">CDevel</a><a class="nav-child " href="airlock-browser.html">Browser</a><a class="nav-child " href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child " href="metrics-influx.html">Metrics Influx</a><a class="nav-child " href="gossip.html">Gossip</a><a class="nav-child " href="dysfx.html">Dysfx</a></details><a class="" href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / RECKONING THINKING</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Thinking</span><span>Let the model reason</span></div>
+      <div class="page article-page">
+        <header class="article-head"><h1>Let a model think before it answers.</h1><p class="lede">Some large language models support thinking or reasoning. They spend extra generation steps working through a problem before returning the answer, which can help with math, translation, planning, and other tasks where the first response is not always the best response.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/del5/tree/main/core/src/test/java/io/teknek/reckoning/integration/qwen">View the Qwen tests ↗</a><a class="button ghost" href="#enable">Enable thinking</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="how">Thinking is a separate part of the response</h2>
+          <p>The details vary from model to model, but it is common for reasoning models to put their private working in a separate <code>&lt;think&gt;</code> section of the response stream. Prompt templates also commonly provide a switch such as <code>enable_thinking</code> to turn that behavior on or off.</p>
+          <p>Because Reckoning aims to work with existing model conventions, enabling thinking for a model such as Qwen follows the same pattern used by its other clients.</p>
+
+          <h2 id="enable">How to enable thinking</h2>
+          <p>Set the model’s template argument, then generate normally. The model response keeps the reasoning and user-facing answer available to the application:</p>
+          <pre><code>PromptContext prompt = model.promptSupport().orElseThrow().builder()
+    .addTemplateArgs(Map.of("enable_thinking", true))
+    .addUserMessage("I have a square with a side length of 4. What is its area?")
+    .build();
+
+Response response = model.generate(sessionId, prompt, parameters, events);
+System.out.println(response.reasoningContent);
+System.out.println(response.responseText);</code></pre>
+
+          <h2 id="benchmark">A benchmark made for humans to read</h2>
+          <p>Reckoning includes a thinking-benchmark script that runs several problems and records the prompt, visible reasoning, final answer, token count, timing, and finish reason. The point is not only to measure speed. It lets you see what the model actually did.</p>
+
+          <h2 id="square">Square area</h2>
+          <p>The first case is deliberately ordinary: a short math problem. The thinking stream works through the formula and checks the arithmetic before the separate answer is returned.</p>
+          <pre><code>&lt;think&gt;
+The area of a square is the side multiplied by itself.
+The side is 4, so 4 multiplied by 4 is 16.
+&lt;/think&gt;
+
+final: 16</code></pre>
+          <div class="example-output"><strong>&gt;&gt; result</strong> final: 16</div>
+
+          <h2 id="translation">The impressive case: a Chinese round-trip</h2>
+          <p>The most interesting case is multilingual. The model receives an English math question, translates it into Chinese, reasons about the answer in Chinese, and translates the finished answer back into English with the requested final marker.</p>
+          <pre><code>[question]
 I have a square with a side length of 4. What is its area?
-Think if needed, then answer with `final: &lt;answer&gt;`.
 
-[think]
-Okay, so I need to find the area of a square with a side length of 4. The area of a square is calculated by multiplying the side length by itself. So, the formula should be side squared. If the side is 4, then the area would be 4 multiplied by 4. 4 times 4 is 16. So, the answer should be 16 square units.
-
-[answer]
-final: 16
-
-[metrics]
-prompt_tokens=39 generated_tokens=206 time_ms=29812
-finish_reason=STOP_TOKEN
-result: pass=true</code></pre>
-
-<h2 id="bat">Bat and ball</h2><pre><code>[prompt]
-A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much does the ball cost?
-Think if needed, then answer with `final: &lt;answer&gt;`.
-
-[think]
-Let the cost of the ball be x dollars. The bat costs x + 1.00 dollars. Together, x + (x + 1.00) = 1.10, so 2x = 0.10 and x = 0.05. If the ball is 5 cents, the bat is $1.05, and together they cost $1.10.
-
-[answer]
-final: 5 cents
-
-[metrics]
-generated_tokens=768 finish_reason=MAX_TOKENS
-result: pass=false</code></pre>
-
-<h2 id="calendar">Calendar</h2><pre><code>[prompt]
-Today is Wednesday. I have a meeting 10 days after the day before tomorrow. What day of the week is the meeting?
-Think if needed, then answer with `final: &lt;day&gt;`.
-
-[think]
-Today is Wednesday. Tomorrow is Thursday. The day before tomorrow is Wednesday. The meeting is 10 days after Wednesday. Counting forward 10 days gives Saturday.
-
-[metrics]
-generated_tokens=768 finish_reason=MAX_TOKENS
-result: pass=false</code></pre>
-
-<h2 id="translation">Chinese round-trip</h2><p>The model translates the question, reasons in Chinese, answers it, then translates the answer back to English.</p><pre><code>[prompt 1]
-Translate this question into Chinese only: I have a square with a side length of 4. What is its area?
-
-[think]
-The user is asking to translate a question into Chinese only. The original question is about the area of a square with side length 4. In Chinese, square is 正方形, side length is 边长, and area is 面积. The translation should be: 我有一个边长为4的正方形。它的面积是多少？
-
-[answer 1]
+[Chinese]
 我有一个边长为4的正方形。它的面积是多少？
 
-[prompt 2]
-请只用中文思考并回答。
-
-[think]
-嗯，用户问的是边长为4的正方形面积是多少。正方形的面积应该是边长的平方，所以边长是4的话，面积就是4乘以4，也就是16。答案应该是16。
-
-[answer 2]
+[Chinese answer]
 正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。
 答案：16。
 
-[prompt 3]
-Translate this Chinese answer back to English. End with `final: &lt;answer&gt;`.
-
-[think]
-The Chinese text says that the formula for the area of a square is the square of its side length, and that a square with side length 4 has area 16. The final line should be final: 16.
-
-[answer 3]
+[English answer]
 The formula for the area of a square is the square of its side length.
 The area of a square with a side length of 4 is: 4 × 4 = 16.
-Answer: 16.
-final: 16
+final: 16</code></pre>
+          <div class="note"><p><strong>Why this matters:</strong> this is a 4B parameter quantized model moving between languages and reasoning steps. That kind of round-trip depends on the model’s prompt handling and tokenizer being correct. It is one reason <a href="grace.html">Grace</a> treats tokenization as a first-class part of the JVM AI stack.</p></div>
 
-[metrics]
-generated_tokens=1262 finish_reason=STOP_TOKEN
-result: pass=true</code></pre><div class="example-output"><strong>&gt;&gt; returns</strong> final: 16</div>
-
-<h2 id="source">Source</h2><p>These cases come from the <a href="https://github.com/edwardcapriolo/del5/tree/main/core/src/test/java/io/teknek/reckoning/integration/qwen">Qwen integration tests</a> and run against <code>Qwen3-4B-JQ4</code>.</p>
-</article><aside class="toc"><strong>Thinking</strong><a href="#square">Square area</a><a href="#bat">Bat and ball</a><a href="#calendar">Calendar</a><a href="#translation">Chinese round-trip</a><a href="#source">Source</a></aside></div></div><footer class="footer"><span>Thinking / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/core">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer></main></div></body></html>
+          <h2 id="details">What the benchmark records</h2>
+          <p>Each case reports the generated token count, time to first token, total time, tokens per second, and finish reason. A model can produce a correct answer, run out of token budget, or stop normally; the benchmark makes those differences visible instead of flattening them into one success string.</p>
+          <p>Read the detailed <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/benchmarking.md">benchmarking documentation</a> and the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/reasoning_field_support.md">reasoning field notes</a> when you want the implementation details.</p>
+        </article><aside class="toc"><strong>Thinking</strong><a href="#how">What thinking is</a><a href="#enable">Enable it</a><a href="#benchmark">The benchmark</a><a href="#square">Square area</a><a href="#translation">Chinese round-trip</a><a href="#details">Metrics</a></aside></div>
+      </div>
+      <footer class="footer"><span>Thinking / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/core">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>
