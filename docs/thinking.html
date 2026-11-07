@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Thinking — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p><nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a href="classification.html">Classification</a><a class="active" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a href="grace.html">Grace</a><a href="sketches.html">Sketches</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-child" href="airlock.html">Overview</a><a class="nav-child" href="airlock-devel.html">Devel</a><a class="nav-child" href="airlock-cdevel.html">CDevel</a><a class="nav-child" href="airlock-browser.html">Browser</a><a class="nav-child" href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child" href="metrics-influx.html">Metrics Influx</a><a class="nav-child" href="gossip.html">Gossip</a><a class="nav-child" href="dysfx.html">Dysfx</a></details><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav><div class="sidebar-foot">OPENJ / RECKONING THINKING</div></aside><main class="main"><div class="topline"><span>OpenJ / Reckoning / Thinking</span><span>Make reasoning inspectable</span></div><div class="page article-page"><header class="article-head"><h1>Let a thinking model show its work.</h1><p class="lede">A Qwen3-4B-JQ4 benchmark run with visible reasoning, final answers, token counts, timing, and pass/fail results.</p></header><div class="article-layout"><article class="article">
+<h2 id="square">Square area</h2><pre><code>[prompt]
+I have a square with a side length of 4. What is its area?
+Think if needed, then answer with `final: &lt;answer&gt;`.
+
+[think]
+Okay, so I need to find the area of a square with a side length of 4. The area of a square is calculated by multiplying the side length by itself. So, the formula should be side squared. If the side is 4, then the area would be 4 multiplied by 4. 4 times 4 is 16. So, the answer should be 16 square units.
+
+[answer]
+final: 16
+
+[metrics]
+prompt_tokens=39 generated_tokens=206 time_ms=29812
+finish_reason=STOP_TOKEN
+result: pass=true</code></pre>
+
+<h2 id="bat">Bat and ball</h2><pre><code>[prompt]
+A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much does the ball cost?
+Think if needed, then answer with `final: &lt;answer&gt;`.
+
+[think]
+Let the cost of the ball be x dollars. The bat costs x + 1.00 dollars. Together, x + (x + 1.00) = 1.10, so 2x = 0.10 and x = 0.05. If the ball is 5 cents, the bat is $1.05, and together they cost $1.10.
+
+[answer]
+final: 5 cents
+
+[metrics]
+generated_tokens=768 finish_reason=MAX_TOKENS
+result: pass=false</code></pre>
+
+<h2 id="calendar">Calendar</h2><pre><code>[prompt]
+Today is Wednesday. I have a meeting 10 days after the day before tomorrow. What day of the week is the meeting?
+Think if needed, then answer with `final: &lt;day&gt;`.
+
+[think]
+Today is Wednesday. Tomorrow is Thursday. The day before tomorrow is Wednesday. The meeting is 10 days after Wednesday. Counting forward 10 days gives Saturday.
+
+[metrics]
+generated_tokens=768 finish_reason=MAX_TOKENS
+result: pass=false</code></pre>
+
+<h2 id="translation">Chinese round-trip</h2><p>The model translates the question, reasons in Chinese, answers it, then translates the answer back to English.</p><pre><code>[prompt 1]
+Translate this question into Chinese only: I have a square with a side length of 4. What is its area?
+
+[think]
+The user is asking to translate a question into Chinese only. The original question is about the area of a square with side length 4. In Chinese, square is 正方形, side length is 边长, and area is 面积. The translation should be: 我有一个边长为4的正方形。它的面积是多少？
+
+[answer 1]
+我有一个边长为4的正方形。它的面积是多少？
+
+[prompt 2]
+请只用中文思考并回答。
+
+[think]
+嗯，用户问的是边长为4的正方形面积是多少。正方形的面积应该是边长的平方，所以边长是4的话，面积就是4乘以4，也就是16。答案应该是16。
+
+[answer 2]
+正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。
+答案：16。
+
+[prompt 3]
+Translate this Chinese answer back to English. End with `final: &lt;answer&gt;`.
+
+[think]
+The Chinese text says that the formula for the area of a square is the square of its side length, and that a square with side length 4 has area 16. The final line should be final: 16.
+
+[answer 3]
+The formula for the area of a square is the square of its side length.
+The area of a square with a side length of 4 is: 4 × 4 = 16.
+Answer: 16.
+final: 16
+
+[metrics]
+generated_tokens=1262 finish_reason=STOP_TOKEN
+result: pass=true</code></pre><div class="example-output"><strong>&gt;&gt; returns</strong> final: 16</div>
+
+<h2 id="source">Source</h2><p>These cases come from the <a href="https://github.com/edwardcapriolo/del5/tree/main/core/src/test/java/io/teknek/reckoning/integration/qwen">Qwen integration tests</a> and run against <code>Qwen3-4B-JQ4</code>.</p>
+</article><aside class="toc"><strong>Thinking</strong><a href="#square">Square area</a><a href="#bat">Bat and ball</a><a href="#calendar">Calendar</a><a href="#translation">Chinese round-trip</a><a href="#source">Source</a></aside></div></div><footer class="footer"><span>Thinking / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/core">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer></main></div></body></html>
