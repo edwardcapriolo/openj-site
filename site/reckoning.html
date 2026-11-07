@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="InferJ, the Java-native inference engine inside OpenJ.">
-  <title>InferJ — OpenJ</title>
+  <meta name="description" content="Reckoning, the Java-native inference engine inside OpenJ.">
+  <title>Reckoning — OpenJ</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -12,21 +12,21 @@
     <aside class="sidebar">
       <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
       <p>Practical, reusable tools for exploring AI from Java, Groovy, and the wider JVM.</p>
-      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a class="active" href="inferj.html">InferJ</a><span class="nav-label">InferJ Tools</span><a href="grace.html">Grace</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/sketches">Sketches ↗</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">InferJ Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
-      <div class="sidebar-foot">OPENJ / INFERJ RUNTIME</div>
+      <nav class="nav" aria-label="Primary navigation"><a href="index.html">Start here</a><a class="active" href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a href="classification.html">Classification</a><span class="nav-label">Reckoning Tools</span><a href="grace.html">Grace</a><a href="sketches.html">Sketches</a><a href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a href="jq4.html">JQ4 tensors</a><a href="http-api.html">HTTP API</a><a href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <div class="sidebar-foot">OPENJ / RECKONING RUNTIME</div>
     </aside>
     <main class="main">
-      <div class="topline"><span>OpenJ / InferJ</span><span>Inference, made inspectable</span></div>
+      <div class="topline"><span>OpenJ / Reckoning</span><span>Inference, made inspectable</span></div>
       <div class="page article-page">
         <header class="article-head">
-          <h1>InferJ is where models meet the JVM.</h1>
+          <h1>Reckoning is where models meet the JVM.</h1>
           <p class="lede">A Java inference engine for running models locally, learning how they work, and building useful applications without hiding the interesting parts.</p>
           <div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/deliverance">View the source ↗</a><a class="button ghost" href="#quickstart">Jump to quickstart</a></div>
         </header>
         <div class="article-layout">
           <article class="article">
             <h2 id="quickstart">A first look</h2>
-            <p>InferJ is designed to cover the path from a small experiment to an embedded or HTTP-served model. The same project can expose generation, embeddings, and classification while keeping the runtime close enough to inspect.</p>
+            <p>Reckoning is designed to cover the path from a small experiment to an embedded or HTTP-served model. The same project can expose generation, embeddings, and classification while keeping the runtime close enough to inspect.</p>
             <pre><code>try (AbstractModel model = AutoModelForCausalLm.newBuilder(fetch).build()) {
   Response response = model.generate(prompt);
   System.out.println(response.responseText);
@@ -39,13 +39,18 @@
               <div class="project-card"><div class="project-meta"><span>Serving</span><span>03</span></div><p>Expose familiar chat and completion endpoints for applications and tools.</p></div>
               <div class="project-card"><div class="project-meta"><span>Internals</span><span>04</span></div><p>Study tensors, quantization, caches, SIMD, and the decisions behind the runtime.</p></div>
             </div>
+            <h2 id="classification">Classification</h2>
+            <p>Use a local model to classify a sentence directly from Java. XLM-RoBERTa can identify the language of ordinary text:</p>
+            <pre><code>Map&lt;String, Float&gt; result = model.classify(
+    "Bonjour tout le monde.", PoolingType.MODEL);
+// fr</code></pre>
             <h2>Keep going</h2>
             <p>Next, the docs should make the route explicit: <a href="https://github.com/edwardcapriolo/deliverance/blob/main/build.md">build it</a>, <a href="https://github.com/edwardcapriolo/deliverance">run an example</a>, then follow the internals when you want to go deeper.</p>
           </article>
-          <aside class="toc"><strong>On this page</strong><a href="#quickstart">A first look</a><a href="#quickstart">Capabilities</a><a href="#quickstart">Next steps</a></aside>
+            <aside class="toc"><strong>On this page</strong><a href="#quickstart">A first look</a><a href="#quickstart">Capabilities</a><a href="#quickstart">Next steps</a></aside>
         </div>
       </div>
-      <footer class="footer"><span>InferJ / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+      <footer class="footer"><span>Reckoning / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
     </main>
   </div>
 </body>
