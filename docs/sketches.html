@@ -44,14 +44,19 @@
 
 Review review = Sketches.generator(model)
     .json(Review.class)
-    .generate("Analyze this review");</code></pre>
+    .generate("Back to the Future is the best movie, besides Back to the Future II");</code></pre>
             <div class="example-output"><strong>&gt;&gt; returns</strong> <code>Review[Positive, 9]</code></div>
             <h2 id="generic">Use generic result types</h2>
-            <p>Jackson’s <code>TypeReference</code> keeps collections and nested generic results typed:</p>
-            <pre><code>List&lt;Review&gt; reviews = Sketches.generator(model)
-    .json(new TypeReference&lt;List&lt;Review&gt;&gt;() {})
-    .generate("Analyze these reviews");</code></pre>
-            <div class="example-output"><strong>&gt;&gt; returns</strong> a typed <code>List&lt;Review&gt;</code></div>
+             <p>Jackson’s <code>TypeReference</code> keeps collections and nested generic results typed. This prompt names three reviews, so the result is a list with exactly three records:</p>
+             <pre><code>List&lt;Review&gt; reviews = Sketches.generator(model)
+     .json(new TypeReference&lt;List&lt;Review&gt;&gt;() {})
+     .generate("""
+         Return exactly three Review records, one for each review:
+         1. I really enjoyed this one.
+         2. This movie was scary.
+         3. I laughed until I cried.
+         """);</code></pre>
+             <div class="example-output"><strong>&gt;&gt; returns</strong> <code>[Review[Positive, 9], Review[Negative, 6], Review[Positive, 8]]</code></div>
             <h2 id="errors">Failures are explicit</h2>
             <p>If the model returns invalid JSON or generation fails, Sketches raises <code>SketchesGenerationException</code> instead of silently returning an unusable object.</p>
             <pre><code>SketchesGenerationException
