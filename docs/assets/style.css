@@ -41,11 +41,39 @@ a:hover { color: var(--signal-dark); }
 .brand-name { font: 700 .95rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .eyebrow { color: var(--signal-dark); font: 600 .68rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .sidebar p { color: #a8aeaa; font-size: .86rem; max-width: 14rem; }
-.nav { margin-top: auto; display: grid; gap: .55rem; }
+.nav { margin-top: 2.5rem; display: grid; gap: .55rem; }
 .nav a { color: #b6bbb7; text-decoration: none; font: .82rem var(--mono); padding: .42rem 0; border-bottom: 1px solid transparent; }
 .nav a:hover, .nav a.active { color: var(--signal); border-color: var(--signal); }
-.nav-label { margin-top: .8rem; color: #68716b; font: .62rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-.sidebar-foot { margin-top: 2rem; color: #747c77; font: .65rem var(--mono); }
+.nav > a[href="reckoning.html"] { margin-top: .35rem; color: var(--white); font-size: 1rem; font-weight: 600; }
+.nav > a.nav-section-link { margin-top: .2rem; color: var(--white); font-size: .95rem; font-weight: 600; border-bottom: 0; }
+.nav-label { margin-top: 1.1rem; padding-bottom: .35rem; border-bottom: 1px solid rgba(168,174,170,.2); color: #a8aeaa; font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.nav a.nav-child { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
+.nav a.nav-child:hover, .nav a.nav-child.active { border-left-color: var(--signal); }
+.nav a[href="classification.html"],
+.nav a[href="grace.html"],
+.nav a[href="sketches.html"],
+.nav a[href="antares.html"],
+.nav a[href*="nanocode-deliverance"],
+.nav a[href="jq4.html"],
+.nav a[href="http-api.html"],
+.nav a[href="airlock.html"] { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
+.nav a[href="classification.html"]:hover,
+.nav a[href="classification.html"].active,
+.nav a[href="grace.html"]:hover,
+.nav a[href="grace.html"].active,
+.nav a[href="sketches.html"]:hover,
+.nav a[href="sketches.html"].active,
+.nav a[href="antares.html"]:hover,
+.nav a[href="antares.html"].active,
+.nav a[href*="nanocode-deliverance"]:hover,
+.nav a[href*="nanocode-deliverance"].active,
+.nav a[href="jq4.html"]:hover,
+.nav a[href="jq4.html"].active,
+.nav a[href="http-api.html"]:hover,
+.nav a[href="http-api.html"].active,
+.nav a[href="airlock.html"]:hover,
+.nav a[href="airlock.html"].active { border-left-color: var(--signal); }
+.sidebar-foot { margin-top: auto; color: #747c77; font: .65rem var(--mono); }
 
 .main { min-width: 0; }
 .topline { display: flex; justify-content: space-between; gap: 1rem; padding: 1.3rem 4.5rem; border-bottom: 1px solid var(--line); color: var(--muted); font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -103,6 +131,9 @@ code { font-family: var(--mono); font-size: .9em; }
 :not(pre) > code { padding: .12rem .28rem; background: rgba(16,18,20,.08); }
 .note { padding: 1.2rem 1.4rem; margin: 2rem 0; border-left: 3px solid var(--signal-dark); background: rgba(217,255,63,.18); }
 .note p { margin: 0; }
+.browser-capture { margin: 2rem 0; }
+.browser-capture img { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+.browser-capture figcaption { margin-top: .7rem; color: var(--muted); font: .68rem var(--mono); }
 .journal-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
 .journal-item { display: grid; grid-template-columns: 9rem 1fr 6rem; gap: 1.5rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
 .journal-item:hover { color: var(--signal-dark); }
