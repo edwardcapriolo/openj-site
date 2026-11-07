@@ -46,6 +46,14 @@ a:hover { color: var(--signal-dark); }
 .nav a:hover, .nav a.active { color: var(--signal); border-color: var(--signal); }
 .nav > a[href="reckoning.html"] { margin-top: .35rem; color: var(--white); font-size: 1rem; font-weight: 600; }
 .nav > a.nav-section-link { margin-top: .2rem; color: var(--white); font-size: .95rem; font-weight: 600; border-bottom: 0; }
+.nav-group { display: grid; gap: .55rem; width: 100%; margin-top: 1.1rem; }
+.nav-group summary { display: flex; justify-content: space-between; cursor: pointer; list-style: none; padding-bottom: .35rem; border-bottom: 1px solid rgba(168,174,170,.2); color: #a8aeaa; font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.nav-group summary::marker, .nav-group summary::-webkit-details-marker { display: none; content: ""; }
+.nav-toggle::before { content: "[+]"; }
+.nav-group[open] .nav-toggle::before { content: "[-]"; }
+.nav-group > a { display: block; }
+.nav-group > .nav-section-link { margin-top: .2rem; }
+.nav-group > .nav-child { margin-left: .9rem; }
 .nav-label { margin-top: 1.1rem; padding-bottom: .35rem; border-bottom: 1px solid rgba(168,174,170,.2); color: #a8aeaa; font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .nav a.nav-child { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
 .nav a.nav-child:hover, .nav a.nav-child.active { border-left-color: var(--signal); }
@@ -79,7 +87,7 @@ a:hover { color: var(--signal-dark); }
 .topline { display: flex; justify-content: space-between; gap: 1rem; padding: 1.3rem 4.5rem; border-bottom: 1px solid var(--line); color: var(--muted); font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .page { max-width: 92rem; padding: 5rem 4.5rem 7rem; }
 .article-page { padding-top: 2.5rem; }
-.hero { min-height: 34rem; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid var(--line); padding-bottom: 4rem; position: relative; overflow: hidden; }
+.hero { min-height: 34rem; display: flex; flex-direction: column; justify-content: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 4rem; position: relative; overflow: hidden; }
 .hero::after { content: ""; position: absolute; right: 2rem; bottom: 2rem; width: 15rem; height: 15rem; border: 1px solid var(--line); border-radius: 50%; box-shadow: 0 0 0 2rem transparent, 0 0 0 2.1rem var(--line), 0 0 0 4.4rem transparent, 0 0 0 4.5rem var(--line); opacity: .55; pointer-events: none; }
 .hero::after { z-index: 0; }
 .hero > * { position: relative; z-index: 1; }
@@ -87,7 +95,7 @@ h1, h2, h3 { line-height: 1.05; margin: 0; font-weight: 600; letter-spacing: -.0
 h1 { max-width: 10ch; font-size: clamp(3.8rem, 9vw, 9.5rem); }
 h2 { font-size: clamp(2rem, 4vw, 4.2rem); }
 h3 { font-size: 1.2rem; }
-.hero h1 { margin: 1rem 0 1.6rem; }
+.hero h1 { margin: 0 0 1.6rem; }
 .hero h1 span { color: var(--signal-dark); }
 .lede { max-width: 39rem; color: #515854; font-size: clamp(1.08rem, 1.6vw, 1.35rem); }
 .button-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2rem; }
@@ -113,7 +121,8 @@ h3 { font-size: 1.2rem; }
 .status span { display: block; margin-top: .35rem; color: var(--muted); font: .65rem var(--mono); text-transform: uppercase; }
 
 .article-head { max-width: 58rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
-.article-head h1 { max-width: 16ch; margin: .75rem 0 1rem; font-size: clamp(2.4rem, 4vw, 4.8rem); }
+.article-head > .eyebrow { display: none; }
+.article-head h1 { max-width: 16ch; margin: 0 0 1rem; font-size: clamp(2.4rem, 4vw, 4.8rem); }
 .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; gap: 4rem; max-width: 70rem; padding-top: 2rem; }
 .article { max-width: 47rem; font-size: 1.05rem; }
 .article h2 { margin: 3rem 0 1rem; font-size: 2.1rem; }
@@ -150,6 +159,7 @@ code { font-family: var(--mono); font-size: .9em; }
   .brand { margin: 0; }
   .sidebar > p, .sidebar-foot { display: none; }
   .nav { display: flex; flex-wrap: wrap; gap: .15rem 1rem; margin: 0; }
+  .nav-group { display: grid; flex-basis: 100%; gap: .55rem; margin-top: .8rem; }
   .nav a { border: 0; padding: .35rem 0; }
   .nav-label { display: none; }
   .topline { padding: .8rem 1.2rem; }
