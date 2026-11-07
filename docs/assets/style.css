@@ -86,13 +86,14 @@ a:hover { color: var(--signal-dark); }
 .main { min-width: 0; }
 .topline { display: flex; justify-content: space-between; gap: 1rem; padding: 1.3rem 4.5rem; border-bottom: 1px solid var(--line); color: var(--muted); font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .page { max-width: 92rem; padding: 5rem 4.5rem 7rem; }
+.page:not(.article-page) { padding-top: 2.5rem; }
 .article-page { padding-top: 2.5rem; }
-.hero { min-height: 34rem; display: flex; flex-direction: column; justify-content: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 4rem; position: relative; overflow: hidden; }
+.hero { min-height: 28rem; display: flex; flex-direction: column; justify-content: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 3rem; position: relative; overflow: hidden; }
 .hero::after { content: ""; position: absolute; right: 2rem; bottom: 2rem; width: 15rem; height: 15rem; border: 1px solid var(--line); border-radius: 50%; box-shadow: 0 0 0 2rem transparent, 0 0 0 2.1rem var(--line), 0 0 0 4.4rem transparent, 0 0 0 4.5rem var(--line); opacity: .55; pointer-events: none; }
 .hero::after { z-index: 0; }
 .hero > * { position: relative; z-index: 1; }
 h1, h2, h3 { line-height: 1.05; margin: 0; font-weight: 600; letter-spacing: -.045em; }
-h1 { max-width: 10ch; font-size: clamp(3.8rem, 9vw, 9.5rem); }
+h1 { max-width: 10ch; font-size: clamp(3.2rem, 6.5vw, 7rem); }
 h2 { font-size: clamp(2rem, 4vw, 4.2rem); }
 h3 { font-size: 1.2rem; }
 .hero h1 { margin: 0 0 1.6rem; }
