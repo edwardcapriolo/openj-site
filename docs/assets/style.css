@@ -58,6 +58,7 @@ a:hover { color: var(--signal-dark); }
 .nav a.nav-child { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
 .nav a.nav-child:hover, .nav a.nav-child.active { border-left-color: var(--signal); }
 .nav a[href="classification.html"],
+.nav a[href="tool-calls.html"],
 .nav a[href="thinking.html"],
 .nav a[href="grace.html"],
 .nav a[href="sketches.html"],
@@ -68,6 +69,8 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="airlock.html"] { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
 .nav a[href="classification.html"]:hover,
 .nav a[href="classification.html"].active,
+.nav a[href="tool-calls.html"]:hover,
+.nav a[href="tool-calls.html"].active,
 .nav a[href="thinking.html"]:hover,
 .nav a[href="thinking.html"].active,
 .nav a[href="grace.html"]:hover,
@@ -159,10 +162,10 @@ code { font-family: var(--mono); font-size: .9em; }
 
 @media (max-width: 850px) {
   .site-shell { display: block; }
-  .sidebar { position: relative; height: auto; padding: 1rem 1.2rem; display: grid; grid-template-columns: 1fr auto; align-items: center; }
+  .sidebar { position: relative; height: auto; padding: 1rem 1.2rem; display: block; }
   .brand { margin: 0; }
   .sidebar > p, .sidebar-foot { display: none; }
-  .nav { display: flex; flex-wrap: wrap; gap: .15rem 1rem; margin: 0; }
+  .nav { display: grid; width: 100%; gap: .55rem; margin: 1.5rem 0 0; }
   .nav-group { display: grid; flex-basis: 100%; gap: .55rem; margin-top: .8rem; }
   .nav a { border: 0; padding: .35rem 0; }
   .nav-label { display: none; }
