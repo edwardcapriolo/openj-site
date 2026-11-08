@@ -12,7 +12,7 @@
     <aside class="sidebar">
       <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
       <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
-      <nav class="nav" aria-label="Primary navigation"><a class="" href="index.html">Start here</a><a class="" href="reckoning.html">Reckoning</a><span class="nav-label">Reckoning Functions</span><a class="" href="classification.html">Classification</a><a class="" href="tool-calls.html">Tool Calls</a><a class="active" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a class="" href="grace.html">Grace</a><a class="" href="sketches.html">Sketches</a><a class="" href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a class="" href="jq4.html">JQ4 tensors</a><a class="" href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-section-link" href="airlock.html">Overview</a><a class="nav-child" href="airlock-devel.html">Devel</a><a class="nav-child" href="airlock-cdevel.html">CDevel</a><a class="nav-child" href="airlock-browser.html">Browser</a><a class="nav-child" href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child" href="metrics-influx.html">Metrics Influx</a><a class="nav-child" href="gossip.html">Gossip</a><a class="nav-child" href="dysfx.html">Dysfx</a></details><a class="" href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
+      <nav class="nav" aria-label="Primary navigation"><a class="" href="index.html">Start here</a><a class="" href="reckoning.html">Reckoning</a><details class="nav-group"><summary>Getting Started <span class="nav-toggle"></span></summary><a class="nav-child" href="embedded.html">Embedded Java</a><a class="nav-child" href="groovy.html">Interactive Groovy</a></details><span class="nav-label">Reckoning Functions</span><a class="" href="classification.html">Classification</a><a class="" href="tool-calls.html">Tool Calls</a><a class="active" href="thinking.html">Thinking</a><span class="nav-label">Reckoning Tools</span><a class="" href="grace.html">Grace</a><a class="" href="sketches.html">Sketches</a><a class="" href="antares.html">Antares</a><a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a><span class="nav-label">Reckoning Components</span><a class="" href="jq4.html">JQ4 tensors</a><a class="" href="http-api.html">HTTP API</a><details class="nav-group"><summary>Airlock <span class="nav-toggle"></span></summary><a class="nav-section-link" href="airlock.html">Overview</a><a class="nav-child" href="airlock-devel.html">Devel</a><a class="nav-child" href="airlock-cdevel.html">CDevel</a><a class="nav-child" href="airlock-browser.html">Browser</a><a class="nav-child" href="airlock-cloudops.html">CloudOps</a></details><details class="nav-group"><summary>Libraries <span class="nav-toggle"></span></summary><a class="nav-child" href="metrics-influx.html">Metrics Influx</a><a class="nav-child" href="gossip.html">Gossip</a><a class="nav-child" href="dysfx.html">Dysfx</a></details><a class="" href="journal.html">Journal</a><a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a></nav>
       <div class="sidebar-foot">OPENJ / RECKONING THINKING</div>
     </aside>
     <main class="main">
@@ -49,20 +49,45 @@ final: 16</code></pre>
           <div class="example-output"><strong>&gt;&gt; result</strong> final: 16</div>
 
           <h2 id="translation">The impressive case: a Chinese round-trip</h2>
-          <p>The most interesting case is multilingual. The model receives an English math question, translates it into Chinese, reasons about the answer in Chinese, and translates the finished answer back into English with the requested final marker.</p>
-          <pre><code>[question]
+          <p>For a harder benchmark case, we chose a problem that combines translation and math. This is not one prompt with three labels. It is a full round trip across multiple prompts.</p>
+          <pre><code><span class="console-user">[user]</span> &gt;&gt; Translate this question into Chinese only:
 I have a square with a side length of 4. What is its area?
 
-[Chinese]
-我有一个边长为4的正方形。它的面积是多少？
+<span class="console-thinking">[thinking]</span>
+Okay, the user is asking to translate a question into Chinese. The original question is: "I have a square with a side length of 4. What is its area?"
 
-[Chinese answer]
-正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。
+First, I need to make sure I understand the task correctly. They want the translation of this question into Chinese, only. So no explanations, just the translated question.
+
+Let me break down the original sentence. The key parts are "square," "side length of 4," and "area."
+
+In Chinese, "square" is "正方形" (zhèngfāngxíng). "Side length" would be "边长" (biāncháng). The number 4 is "四" (sì). "Area" is "面积" (miànjī).
+
+Putting it together: "我有一个边长为4的正方形。它的面积是多少？"
+
+Yes, that should be correct. So the final translation is: "我有一个边长为4的正方形。它的面积是多少？"
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; 我有一个边长为4的正方形。它的面积是多少？
+
+<span class="console-user">[user]</span> &gt;&gt; 请只用中文思考并回答。
+
+<span class="console-thinking">[thinking]</span>
+嗯，用户问的是边长为4的正方形面积是多少。首先，我得回忆一下正方形的面积公式。正方形的面积应该是边长的平方，对吧？所以边长是4的话，面积就是4乘以4，也就是16。不过，我得确认一下有没有哪里容易错的地方。比如，有没有可能用户把边长和周长搞混了？不过题目里明确说是边长为4的正方形，所以应该没问题。另外，有没有可能用户想问的是周长？不过问题里明确说是面积，所以应该没问题。再检查一下计算，4乘4确实是16，没错。所以答案应该是16。
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; 正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。
 答案：16。
 
-[English answer]
-The formula for the area of a square is the square of its side length.
+<span class="console-user">[user]</span> &gt;&gt; Translate this Chinese answer back to English. End with `final: &lt;answer&gt;`.
+
+<span class="console-thinking">[thinking]</span>
+Okay, the user wants me to translate a Chinese answer back into English and end with "final: &lt;answer&gt;". The Chinese text says: "正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。答案：16。"
+
+The first sentence translates to: "The formula for the area of a square is the square of its side length." The second part translates to: "The area of a square with a side length of 4 is: 4 × 4 = 16." Finally, "答案：16。" translates to "Answer: 16."
+
+The final answer should end with "final: 16" as requested.
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; The formula for the area of a square is the square of its side length.
 The area of a square with a side length of 4 is: 4 × 4 = 16.
+Answer: 16.
 final: 16</code></pre>
           <div class="note"><p><strong>Why this matters:</strong> this is a 4B parameter quantized model moving between languages and reasoning steps. That kind of round-trip depends on the model’s prompt handling and tokenizer being correct. It is one reason <a href="grace.html">Grace</a> treats tokenization as a first-class part of the JVM AI stack.</p></div>
 

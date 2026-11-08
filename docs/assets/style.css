@@ -150,6 +150,9 @@ code { font-family: var(--mono); font-size: .9em; }
 .browser-capture { margin: 2rem 0; }
 .browser-capture img { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
 .browser-capture figcaption { margin-top: .7rem; color: var(--muted); font: .68rem var(--mono); }
+.console-user { color: #8eb4e8; }
+.console-thinking { color: #d4b85c; }
+.console-assistant { color: var(--signal); }
 .journal-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
 .journal-item { display: grid; grid-template-columns: 9rem 1fr 6rem; gap: 1.5rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
 .journal-item:hover { color: var(--signal-dark); }
