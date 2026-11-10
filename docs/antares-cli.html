@@ -1,0 +1,47 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Antares CLI uses a local model to locate vulnerable files in a repository."><title>Antares CLI — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / ANTARES CLI</div></aside><main class="main"><div class="topline"><span>OpenJ / Reckoning / Antares CLI</span><span>Locate vulnerable files locally</span></div><div class="page article-page"><header class="article-head"><h1>Find the file that deserves attention.</h1><p class="lede">Antares-1B is an open-weight model specialized for vulnerability localization. The Java CLI runs it locally through Reckoning, gives it terminal-style tools, and returns exact repository-relative files for human review.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/deliverance/tree/main/reckoning-antares-cli">View Antares CLI ↗</a><a class="button ghost" href="#showcase">See the showcase</a></div></header><div class="article-layout"><article class="article"><h2 id="why">Why this matters</h2><p>Security teams need tools that can inspect real code without sending the repository to a hosted service. A compact specialized model can run locally or on-premises, navigate a codebase through tools, and reduce a large investigation to the files that need a human review.</p><p>The <a href="https://blogs.cisco.com/ai/introducing-antares-the-most-efficient-open-weight-ai-models-for-vulnerability-localization">Antares project</a> is built around that vulnerability-localization task. Reckoning provides the local Java inference server and the OpenAI-compatible completions endpoint.</p>
+
+<h2 id="showcase">A CWE-78 showcase</h2><p>The bundled showcase repository contains a deliberately vulnerable Java controller:</p><pre><code>public Process createArchive(String userName) throws IOException {
+    String command = "tar -czf /tmp/" + userName
+        + ".tgz /srv/uploads/" + userName;
+    return Runtime.getRuntime().exec(command);
+}</code></pre><p>The user gives Antares a plain-language question instead of naming the tool:</p><pre><code>Look for user-controlled input reaching Runtime.exec,
+ProcessBuilder, shell commands, or command string concatenation.</code></pre>
+
+<h2 id="investigation">Watch the investigation</h2><p>Antares searches, asks for approval, reads the file it found, and submits an exact repository-relative path:</p><pre><code>[antares] model turn 1, tool calls 0/8
+I’ll first identify the language and major files, then search for OS command execution APIs and command-line construction patterns.
+
+[tool] terminal rg -n "\.exec\(" .
+[approval] y/N: y
+[result]
+./src/main/java/demo/ArchiveController.java:8:
+        return Runtime.getRuntime().exec(command);
+
+[tool] read_file src/main/java/demo/ArchiveController.java
+[result]
+6:     public Process createArchive(String userName) throws IOException {
+7:         String command = "tar -czf /tmp/" + userName + ".tgz /srv/uploads/" + userName;
+8:         return Runtime.getRuntime().exec(command);
+9:     }
+
+[tool] submit_vulnerable_files {ranked_files=[src/main/java/demo/ArchiveController.java]}</code></pre><div class="example-output"><strong>&gt;&gt; returns</strong> vulnerabilityFound=true; rankedFiles=[src/main/java/demo/ArchiveController.java]</div>
+
+<h2 id="run">Run the demo</h2><p>Start the local Antares server and run the bundled showcase:</p><pre><code>./reckoning-antares-cli/run-server-antares-1b.sh
+
+./reckoning-antares-cli/run-showcase-cwe78.sh</code></pre><p>The direct CLI accepts the repository, model, CWE, investigation question, and tool budget:</p><pre><code>java -jar "$(sh reckoning-antares-cli/resolve_antares_cli_jar.sh)" \
+  --repo reckoning-nanocode/showcase-security-repo \
+  --endpoint http://127.0.0.1:18085/v1 \
+  --model antares-1b-JQ4 \
+  --cwe CWE-78 \
+  --query "Look for user-controlled input reaching Runtime.exec, ProcessBuilder, shell commands, or command string concatenation." \
+  --max-tool-calls 4</code></pre>
+
+<h2 id="safety">Keep approval visible</h2><p>By default, the CLI asks before every model-requested terminal command. Answer <code>n</code> when a command is not appropriate. Unattended mode is for a sandbox or container:</p><pre><code>./reckoning-antares-cli/run-showcase-cwe78.sh --yes-run-commands</code></pre><div class="note"><p><strong>Scope:</strong> Antares localizes vulnerabilities. It returns candidate files for review; it does not silently modify the repository.</p></div>
+
+<p>The upstream <a href="https://github.com/fdtn-ai/antares-cli">Antares CLI</a> is the full reference implementation. This Java module is the compact Reckoning-side path.</p>
+</article><aside class="toc"><strong>Antares CLI</strong><a href="#why">Why it matters</a><a href="#showcase">The showcase</a><a href="#investigation">The investigation</a><a href="#run">Run it</a><a href="#safety">Safety</a></aside></div></div><footer class="footer"><span>Antares CLI / OpenJ</span><span><a href="https://github.com/edwardcapriolo/deliverance/tree/main/reckoning-antares-cli">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer></main></div></body></html>
