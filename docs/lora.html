@@ -1,0 +1,35 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="LoRA and PEFT adapter support in Reckoning."><title>LoRA / PEFT — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / LORA / PEFT</div></aside><main class="main"><div class="topline"><span>OpenJ / Reckoning / LoRA</span><span>Specialize one base model</span></div><div class="page article-page"><header class="article-head"><h1>LoRA / PEFT adapters</h1><p class="lede">Small trained updates that change what a base model does.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/deliverance/blob/main/core/lora_support.md">Read the support notes ↗</a><a class="button ghost" href="#test">See the test</a></div></header><div class="article-layout"><article class="article">
+<h2 id="what">What Is A LoRA Adapter?</h2>
+<p>A LoRA adapter is not a second model. It is a small set of extra weights, trained separately from the base model, that nudge the base model's behavior in a particular direction when combined with it at inference time.</p>
+<p>Full fine-tuning produces a new copy of every weight in the model — for a multi-billion parameter model, that is another multi-gigabyte file per variant. LoRA instead trains a pair of much smaller matrices per targeted layer (a low-rank decomposition, hence the name) that approximate the change fine-tuning would have made, without touching the base weights directly. The practical result is what matters here, not the linear algebra: an adapter file is typically single-digit to a few tens of megabytes, it is swappable independently of the base model, and it does not duplicate the base model's weights.</p>
+
+<h2 id="why">Why This Matters</h2>
+<p><strong>Cheap specialization:</strong> get a specialized assistant, tone, or skill on top of one base model without paying the storage and load-time cost of a full model per variant.</p>
+<p><strong>Fast iteration:</strong> adapters are small enough to train, share, and swap far more quickly than retraining or redistributing a full checkpoint.</p>
+<p><strong>One resident base model, many behaviors:</strong> the eventual goal (Phase 2 below) is to keep one base model loaded and switch which adapter is applied per request, rather than loading a different full model for each behavior.</p>
+<p><strong>Standard, portable format:</strong> adapters trained anywhere in the HuggingFace PEFT ecosystem should work with Reckoning's support, without a Reckoning-specific training or export step.</p>
+
+<h2 id="test">One prompt, a different behavior</h2><p>The integration test loads a base model, generates once, activates the adapter, and generates the same prompt again:</p><pre><code>ModelFetcher fetcher = new ModelFetcher(
+    "unsloth", "Llama-3.2-1B-Instruct");
+
+try (AbstractModel model = AutoModelForCausalLm
+        .newBuilder(fetcher).buildLocalTransformerModel()) {
+    String baseline = generate(model);
+    System.out.println("[base model] " + baseline);
+
+    model.registerLoraAdapter("bunnycore-chatml",
+        new LoraAdapterModelFetcher(
+            "bunnycore",
+            "Llama-3.2-1b-chatml-lora_model"));
+    model.setActiveAdapter("bunnycore-chatml");
+
+    String adapted = generate(model);
+    System.out.println("[adapter active] " + adapted);
+}</code></pre><div class="example-output"><strong>&gt;&gt; base model</strong> <code>baseline</code><br><strong>&gt;&gt; adapter active</strong> Hello! I'm an artificial intelligence model, here to provide information and assist with a wide range of topics. I'm designed to be helpful and provide</div><p>The test asserts that the adapted response differs from the base response. It then clears the adapter and verifies that the original base behavior returns.</p><div class="note"><p><strong>Source:</strong> <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/integration/LoraHotSwapIT.java">LoraHotSwapIT</a> and <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/lora_support.md">LoRA support notes</a>.</p></div>
+</article><aside class="toc"><strong>LoRA / PEFT</strong><a href="#what">What is LoRA?</a><a href="#why">Why This Matters</a><a href="#test">The test</a></aside></div></div><footer class="footer"><span>LoRA / PEFT / OpenJ</span><span><a href="https://github.com/edwardcapriolo/deliverance">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer></main></div></body></html>

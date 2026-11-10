@@ -1,0 +1,49 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Spring AI Reckoning: native Spring AI support for the Reckoning inference engine.">
+  <title>Spring AI Reckoning — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / SPRING AI RECKONING</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning Components</span><span>Bring local inference into Spring</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Reckoning component / 03</div>
+          <h1>Give Spring AI a local JVM inference engine.</h1>
+          <p class="lede">Spring AI Reckoning connects Spring AI applications directly to Reckoning, whether the model is served by a local Reckoning process or embedded in the application itself.</p>
+          <div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/spring-ai-reckoning">View the project ↗</a><a class="button ghost" href="http-api.html">See the HTTP boundary</a></div>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="what-changes">What changes</h2>
+            <p>The integration turns Reckoning's Java-native runtime and OpenAI-shaped server API into a Spring AI <code>ChatModel</code>. That gives a Spring application the familiar <code>ChatClient</code> surface while keeping model selection, streaming, tool calls, and local model operation under the developer's control.</p>
+            <p>Use the client module when Reckoning runs as a service. Use the embedded module when the model should live in the same JVM as the Spring application. The two modes share the Spring-facing programming model, so moving from a local server to in-process inference does not require redesigning the application.</p>
+            <h2 id="more-than-a-chat-adapter">More than a chat adapter</h2>
+            <p>Reckoning can fetch a model into its cache and serve it through its HTTP endpoints. The Spring integration can therefore sit in front of a model lifecycle that is still local and inspectable: fetch the checkpoint, serve the model, then call it through Spring AI. The repository also includes a small pull-request review application that shows the integration in a useful workflow rather than a hello-world prompt.</p>
+            <div class="note"><p><strong>Start small:</strong> Qwen3 0.6B JQ4 is a practical first model because it is compact enough for a laptop and fast enough to make the full Spring-to-model loop easy to see.</p></div>
+            <h2 id="keep-going">Keep going</h2>
+            <p>Read the <a href="https://github.com/edwardcapriolo/spring-ai-reckoning/blob/main/README.md">project README</a> for setup and the <a href="https://github.com/edwardcapriolo/reckoning">Reckoning source repository</a> for the inference engine, model formats, serving API, and runtime internals.</p>
+          </article>
+          <aside class="toc"><strong>On this page</strong><a href="#what-changes">What changes</a><a href="#more-than-a-chat-adapter">More than a chat adapter</a><a href="#keep-going">Keep going</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Spring AI Reckoning / OpenJ</span><span><a href="https://html5up.net/editorial">Editorial by HTML5 UP</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>
