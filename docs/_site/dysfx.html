@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dysfx Java monads for explicit failure and result handling.">
+  <title>Dysfx — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="" href="tool-calls.html">Tool Calls</a>
+  <a class="" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" >
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link " href="airlock.html">Overview</a>
+    <a class="nav-child " href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" open>
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child " href="gossip.html">Gossip</a>
+    <a class="nav-child active" href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / DYSFX</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Libraries / Dysfx</span><span>Make failure explicit</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <h1>Make failure a value you can handle.</h1>
+          <p class="lede">Dysfx is a small Java library for the missing monad: represent success and failure as data, choose how checked exceptions are converted, and match the result without throwing it through every caller.</p>
+          <div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/dysfx">View the source ↗</a><a class="button ghost" href="https://github.com/edwardcapriolo/dysfx/tree/main/core">Browse core ↗</a></div>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="try">Turn exceptions into values</h2>
+            <p><code>Try</code> captures a successful computation or a failure and lets the caller decide what to do next:</p>
+            <pre><code>Try&lt;Integer&gt; number = Try.of(() -&gt; Integer.parseInt("four"));
+int value = number.getOrElse(3);
+
+// value == 3</code></pre>
+            <div class="example-output"><strong>&gt;&gt; returns</strong> a Failure value, then uses 3 as the fallback</div>
+
+            <h2 id="control">Choose what gets caught</h2>
+            <p><code>ThrowControl</code> makes checked-exception policy explicit. A caller can convert standard checked exceptions into <code>Failure</code> while allowing errors or selected exceptions to escape.</p>
+            <pre><code>Try.ofCheckedSupplier(supply,
+    ThrowControl.ofStandardChecked());</code></pre>
+
+            <h2 id="either">Keep the useful failure</h2>
+            <p><code>Either</code> is for operations where the left side is not necessarily an exception. A parser can return the original input or the parsed value, so recovery still has the information that caused the failure.</p>
+            <pre><code>Either&lt;String, Integer&gt; result =
+    new Right&lt;&gt;(Integer.parseInt("40"));
+
+assertTrue(result.isRight());
+assertTrue(result.contains(40));</code></pre>
+            <p>Unlike <code>Try</code>, the left side can preserve a useful domain value instead of an exception:</p>
+            <pre><code>String input = "not-a-number";
+Either&lt;String, Integer&gt; parsed =
+    new Left&lt;&gt;(input);
+
+// the failed input is still available for recovery</code></pre>
+            <h2 id="install">Add Dysfx to a project</h2>
+            <p>The published core module is <code>io.teknek.dysfx:core:0.0.5</code>. See it on <a href="https://central.sonatype.com/artifact/io.teknek.dysfx/core">Maven Central</a>, inspect the <a href="https://github.com/edwardcapriolo/dysfx/blob/main/core/pom.xml">core POM</a>, or browse the <a href="https://github.com/edwardcapriolo/dysfx">source repository</a>.</p>
+            <p>Maven:</p>
+            <pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;io.teknek.dysfx&lt;/groupId&gt;
+  &lt;artifactId&gt;core&lt;/artifactId&gt;
+  &lt;version&gt;0.0.5&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+            <p>Gradle:</p>
+            <pre><code>dependencies {
+    implementation("io.teknek.dysfx:core:0.0.5")
+}</code></pre>
+            <div class="note"><p><strong>Useful when:</strong> Java code needs explicit failure paths without burying recovery in nested try/catch blocks.</p></div>
+          </article>
+          <aside class="toc"><strong>Dysfx</strong><a href="#try">Try</a><a href="#control">Throw control</a><a href="#either">Either</a><a href="#install">Add Dysfx</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Dysfx / OpenJ</span><span><a href="https://github.com/edwardcapriolo/dysfx">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

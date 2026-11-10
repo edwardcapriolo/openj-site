@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Airlock: reproducible container workspaces for agent-assisted development.">
+  <title>Airlock — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+       <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="" href="tool-calls.html">Tool Calls</a>
+  <a class="" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" open>
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link active" href="airlock.html">Overview</a>
+    <a class="nav-child " href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" >
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child " href="gossip.html">Gossip</a>
+    <a class="nav-child " href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / AIRLOCK WORKSPACES</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Airlock</span><span>Build inside the boundary</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">OpenJ workspace / 01</div>
+          <h1>Give an agent a controlled environment.</h1>
+          <p class="lede">Airlock is a reproducible, containerized workspace for agent-assisted development. Choose what crosses the boundary: source trees, caches, devices, ports, and credentials.</p>
+          <div class="button-row"><a class="button" href="https://hub.docker.com/r/ecapriolo/trusted-opencode">Open Docker Hub ↗</a><a class="button ghost" href="https://github.com/edwardcapriolo/edgy-ansible">View the source ↗</a></div>
+        </header>
+        <div class="article-layout">
+          <article class="article">
+            <h2 id="images">Choose the image for the work</h2>
+            <p>Trusted Opencode images package a practical development environment around an explicit container boundary. Pull the image that matches the job, then use the Airlock repository for entry scripts and compositions.</p>
+            <div class="project-grid">
+              <a class="project-card" href="airlock-devel.html"><div class="project-meta"><span>0.0.4 / General</span><span>Devel ↗</span></div><div><h3>Build Java.</h3><p>Start a workspace, mount a project, and let an agent build and test it without touching the host directly.</p></div></a>
+              <a class="project-card" href="airlock-cdevel.html"><div class="project-meta"><span>0.0.4 / Native</span><span>CDevel ↗</span></div><div><h3>Compile native code.</h3><p>Use a real compiler toolchain to build and test a small C or C++ project inside the boundary.</p></div></a>
+              <a class="project-card" href="airlock-browser.html"><div class="project-meta"><span>0.0.4 / UI</span><span>Browser ↗</span></div><div><h3>Develop with Chromium.</h3><p>Load a real site, capture the rendered page, and turn visual inspection into the next development decision.</p></div></a>
+              <a class="project-card" href="airlock-cloudops.html"><div class="project-meta"><span>0.0.4 / Infrastructure</span><span>CloudOps ↗</span></div><div><h3>Plan infrastructure.</h3><p>Run OpenTofu and inspect a Kubernetes workflow from a workspace with its own cloud operations tools.</p></div></a>
+            </div>
+
+            <h2 id="boundary">Keep the boundary explicit</h2>
+            <p>An Airlock workspace does not need the host Docker socket. When container workflows are required, the development images can run a rootless Docker daemon inside the workspace. The outer runtime still decides which mounts, ports, devices, and environment variables are allowed through.</p>
+            <div class="note"><p><strong>Not a magic security claim:</strong> Airlock makes the boundary inspectable and configurable. Review the mounts and permissions for the work you are about to run.</p></div>
+
+            <h2 id="source">Get the workspace</h2>
+            <p>Docker Hub contains the published multi-architecture images. Choose one of the four examples above, then use the source repository for build scripts, entry scripts, rootless Docker support, and composition examples.</p>
+            <div class="button-row"><a class="button" href="https://hub.docker.com/r/ecapriolo/trusted-opencode">Browse all images ↗</a><a class="button ghost" href="https://github.com/edwardcapriolo/edgy-ansible/blob/main/releases/trusted-opencode-0.0.3-airlock.md">Read the Airlock notes ↗</a></div>
+          </article>
+          <aside class="toc"><strong>Airlock</strong><a href="#images">Images</a><a href="#boundary">The boundary</a><a href="#source">Get the workspace</a></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Airlock / OpenJ</span><span><a href="https://hub.docker.com/r/ecapriolo/trusted-opencode">Docker Hub</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

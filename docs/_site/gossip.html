@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Teknek Gossip for Java cluster membership and eventually consistent data.">
+  <title>Gossip — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="" href="tool-calls.html">Tool Calls</a>
+  <a class="" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" >
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link " href="airlock.html">Overview</a>
+    <a class="nav-child " href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" open>
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child active" href="gossip.html">Gossip</a>
+    <a class="nav-child " href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / GOSSIP</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Libraries / Gossip</span><span>Let nodes find each other</span></div>
+      <div class="page article-page">
+        <header class="article-head"><h1>Let a cluster learn its shape.</h1><p class="lede">Teknek Gossip is a Java library for membership, liveness, and eventually consistent data sharing. Nodes exchange their local view until the cluster converges.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/gossip">View the source ↗</a><a class="button ghost" href="#membership">See membership</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="membership">Membership without a coordinator</h2>
+          <p>Each node has a URI and seed members. Seeds provide first contact; after startup, nodes learn the rest of the cluster through gossip and expose live and dead member views.</p>
+          <pre><code>GossipManager manager = GossipManagerBuilder.newBuilder()
+    .cluster("example-cluster")
+    .uri(new URI("udp://127.0.0.1:50001"))
+    .id("node-1")
+    .gossipMembers(seedMembers)
+    .listener((member, state) -&gt;
+        System.out.println(member + " is " + state))
+    .build();
+manager.init();</code></pre>
+          <div class="example-output"><strong>&gt;&gt; converges</strong> nodes discover membership and report liveness changes</div>
+
+          <h2 id="data">Share state that can merge</h2>
+          <p>Shared data is for values the cluster should converge on. Per-node data is for facts owned by one node. CRDTs make concurrent updates mergeable instead of turning every update into a coordination problem.</p>
+          <pre><code>SharedDataMessage message = new SharedDataMessage();
+message.setKey("cluster/features");
+message.setPayload(new OrSet&lt;&gt;("jq4", "gpu"));
+manager.merge(message);
+
+// OrSet, GrowOnlyCounter, PNCounter, and more</code></pre>
+
+          <h2 id="spring">Use it in a service</h2>
+          <p>The Spring Boot starter loads the same settings model and exposes HTTP gossip endpoints. A service can move from local UDP nodes to HTTP while keeping cluster state and CRDT behavior.</p>
+          <pre><code>gossip.settings-location=file:node-a.json
+
+POST /gossip/message
+GET  /gossip/status</code></pre>
+
+          <h2 id="install">Add the base module</h2>
+          <p>The published base module is <code>io.teknek.gossip:gossip-base:0.1.4</code>. See it on <a href="https://central.sonatype.com/artifact/io.teknek.gossip/gossip-base">Maven Central</a>, inspect the <a href="https://github.com/edwardcapriolo/gossip/blob/master/gossip-base/pom.xml">base POM</a>, or browse the <a href="https://github.com/edwardcapriolo/gossip/tree/master/gossip-examples">examples</a> and <a href="https://github.com/edwardcapriolo/gossip/tree/master/gossip-spring-boot-starter">Spring starter</a>.</p>
+          <pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;io.teknek.gossip&lt;/groupId&gt;
+  &lt;artifactId&gt;gossip-base&lt;/artifactId&gt;
+  &lt;version&gt;0.1.4&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+          <div class="note"><p><strong>Useful when:</strong> Java services need lightweight membership and convergent shared state without a central coordinator for every node view.</p></div>
+        </article><aside class="toc"><strong>Gossip</strong><a href="#membership">Membership</a><a href="#data">Shared data</a><a href="#spring">Spring transport</a><a href="#install">Add it</a></aside></div>
+      </div>
+      <footer class="footer"><span>Gossip / OpenJ</span><span><a href="https://github.com/edwardcapriolo/gossip">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

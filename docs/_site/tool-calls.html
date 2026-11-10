@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tool calls in Reckoning, demonstrated through the Nanocode terminal agent.">
+  <title>Tool Calls — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="active" href="tool-calls.html">Tool Calls</a>
+  <a class="" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" >
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link " href="airlock.html">Overview</a>
+    <a class="nav-child " href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" >
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child " href="gossip.html">Gossip</a>
+    <a class="nav-child " href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / RECKONING TOOL CALLS</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Tool Calls</span><span>Give the model a way to act</span></div>
+      <div class="page article-page">
+        <header class="article-head"><h1>Ask for an outcome. Let the model choose the tool.</h1><p class="lede">Tool calls connect a model to useful actions without pretending the model can execute them itself. Reckoning has ToolCall support for a variety of popular models including Llama, Qwen, and others.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/del5/tree/main/reckoning-nanocode">View Nanocode ↗</a><a class="button ghost" href="#example">See the example</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="nanocode">Using Nanocode to execute simple tool calls</h2>
+          <p>Nanocode is a small agent. It has built-in tools for basic tasks such as writing files, reading files, searching with <code>grep</code>, finding files with <code>glob</code>, fetching a web page, and running Java in a sandbox. Risky shell execution is disabled unless explicitly enabled.</p>
+          <p>Imagine we have a small project with these files:</p>
+          <pre><code>/project
+/project/something
+/project/something-else    # contains the word cat</code></pre>
+          <p>Here is a detailed look at how the Nanocode <code>grep</code> tool searches those files.</p>
+
+          <h2 id="request">What Nanocode sends</h2>
+          <p>Nanocode sends the user request together with the tools the agent is allowed to use. The model is not given a shell; it is given a description of <code>grep</code> and the arguments that tool accepts.</p>
+          <pre><code>POST /chat/completions
+
+{
+  "model": "Qwen3-4B-JQ4",
+  "messages": [
+    {"role": "user", "content": "Find every place this project mentions cat."}
+  ],
+  "tools": [{
+    "type": "function",
+    "function": {
+      "name": "grep",
+      "description": "Search project files for a pattern.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {"type": "string"},
+          "pattern": {"type": "string"}
+        },
+        "required": ["path", "pattern"]
+      }
+    }
+  }]
+}</code></pre>
+
+          <h2 id="example">The model asks for grep</h2>
+          <p>The model chooses the tool by returning a standard tool call. Nanocode parses it, runs the local tool, and sends the result back as the next message.</p>
+          <pre><code>[user]
+Find every place this project mentions cat.
+
+[thinking]
+I need to search the project files for the requested word.
+
+[assistant / finish_reason=tool_calls]
+{"tool_calls":[{"function":{"name":"grep","arguments":{"path":"/project","pattern":"cat"}}}]}
+
+[nanocode / tool round 1/3]
+[tool] grep {"path":"/project","pattern":"cat"}
+
+[result]
+matches=1
+/project/something-else:1:cat
+
+[tool result sent back to model]
+
+[assistant / final]
+I found one match in something-else at line 1.</code></pre>
+          <div class="example-output"><strong>&gt;&gt; the loop</strong> request → tool call → execution → tool result → final answer</div>
+
+          <h2 id="parser">Models speak different tool languages</h2>
+          <p>Tool calls are model output. Llama-style models may emit JSON, Qwen may wrap the call in XML, and other model families use their own markers. Reckoning assigns a parser that turns those formats into the same Java <code>ToolCall</code> object.</p>
+          <pre><code>List&lt;ToolCall&gt; calls = model.getToolCallParser().extract(response);</code></pre>
+          <p>Common model parsers are built in, and applications can provide their own parser through the model builder:</p>
+          <pre><code>AutoModelForCausalLm.newBuilder(fetch)
+    .withToolCallParser(new QwenToolCallParser())
+    .build();</code></pre>
+
+          <h2 id="boundary">The agent remains in control</h2>
+          <p>Reckoning reports the tool call; the agent decides whether and how to execute it. Nanocode limits tool rounds and result size. Terminal commands ask for approval, and repository file tools reject paths outside the project.</p>
+          <div class="note"><p><strong>The useful boundary:</strong> the model proposes an action, the agent applies policy, and the tool result becomes context for the next model turn.</p></div>
+          <p>Read the detailed <a href="https://github.com/edwardcapriolo/del5/blob/main/core/tool_parser.md">tool parser documentation</a> and the <a href="https://github.com/edwardcapriolo/del5/tree/main/reckoning-nanocode">Nanocode source</a> for model formats, streaming calls, approvals, and tool limits.</p>
+        </article><aside class="toc"><strong>Tool Calls</strong><a href="#nanocode">Nanocode</a><a href="#request">The request</a><a href="#example">The tool call</a><a href="#parser">Parsers</a><a href="#boundary">The boundary</a></aside></div>
+      </div>
+      <footer class="footer"><span>Tool Calls / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/reckoning-nanocode">Nanocode</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

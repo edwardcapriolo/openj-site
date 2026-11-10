@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Thinking and reasoning model support in Reckoning.">
+  <title>Thinking — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="" href="tool-calls.html">Tool Calls</a>
+  <a class="active" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" >
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link " href="airlock.html">Overview</a>
+    <a class="nav-child " href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" >
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child " href="gossip.html">Gossip</a>
+    <a class="nav-child " href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / RECKONING THINKING</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Thinking</span><span>Let the model reason</span></div>
+      <div class="page article-page">
+        <header class="article-head"><h1>Let a model think before it answers.</h1><p class="lede">Some large language models support thinking or reasoning. They spend extra generation steps working through a problem before returning the answer, which can help with math, translation, planning, and other tasks where the first response is not always the best response.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/del5/tree/main/core/src/test/java/io/teknek/reckoning/integration/qwen">View the Qwen tests ↗</a><a class="button ghost" href="#enable">Enable thinking</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="how">Thinking is a separate part of the response</h2>
+          <p>The details vary from model to model, but it is common for reasoning models to put their private working in a separate <code>&lt;think&gt;</code> section of the response stream. Prompt templates also commonly provide a switch such as <code>enable_thinking</code> to turn that behavior on or off.</p>
+          <p>Because Reckoning aims to work with existing model conventions, enabling thinking for a model such as Qwen follows the same pattern used by its other clients.</p>
+
+          <h2 id="enable">How to enable thinking</h2>
+          <p>Set the model’s template argument, then generate normally. The model response keeps the reasoning and user-facing answer available to the application:</p>
+          <pre><code>PromptContext prompt = model.promptSupport().orElseThrow().builder()
+    .addTemplateArgs(Map.of("enable_thinking", true))
+    .addUserMessage("I have a square with a side length of 4. What is its area?")
+    .build();
+
+Response response = model.generate(sessionId, prompt, parameters, events);
+System.out.println(response.reasoningContent);
+System.out.println(response.responseText);</code></pre>
+
+          <h2 id="benchmark">A benchmark made for humans to read</h2>
+          <p>Reckoning includes a thinking-benchmark script that runs several problems and records the prompt, visible reasoning, final answer, token count, timing, and finish reason. The point is not only to measure speed. It lets you see what the model actually did.</p>
+
+          <h2 id="square">Square area</h2>
+          <p>The first case is deliberately ordinary: a short math problem. The thinking stream works through the formula and checks the arithmetic before the separate answer is returned.</p>
+          <pre><code>&lt;think&gt;
+The area of a square is the side multiplied by itself.
+The side is 4, so 4 multiplied by 4 is 16.
+&lt;/think&gt;
+
+final: 16</code></pre>
+          <div class="example-output"><strong>&gt;&gt; result</strong> final: 16</div>
+
+          <h2 id="translation">The impressive case: a Chinese round-trip</h2>
+          <p>For a harder benchmark case, we chose a problem that combines translation and math. This is not one prompt with three labels. It is a full round trip across multiple prompts.</p>
+          <pre><code><span class="console-user">[user]</span> &gt;&gt; Translate this question into Chinese only:
+I have a square with a side length of 4. What is its area?
+
+<span class="console-thinking">[thinking]</span>
+Okay, the user is asking to translate a question into Chinese. The original question is: "I have a square with a side length of 4. What is its area?"
+
+First, I need to make sure I understand the task correctly. They want the translation of this question into Chinese, only. So no explanations, just the translated question.
+
+Let me break down the original sentence. The key parts are "square," "side length of 4," and "area."
+
+In Chinese, "square" is "正方形" (zhèngfāngxíng). "Side length" would be "边长" (biāncháng). The number 4 is "四" (sì). "Area" is "面积" (miànjī).
+
+Putting it together: "我有一个边长为4的正方形。它的面积是多少？"
+
+Yes, that should be correct. So the final translation is: "我有一个边长为4的正方形。它的面积是多少？"
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; 我有一个边长为4的正方形。它的面积是多少？
+
+<span class="console-user">[user]</span> &gt;&gt; 请只用中文思考并回答。
+
+<span class="console-thinking">[thinking]</span>
+嗯，用户问的是边长为4的正方形面积是多少。首先，我得回忆一下正方形的面积公式。正方形的面积应该是边长的平方，对吧？所以边长是4的话，面积就是4乘以4，也就是16。不过，我得确认一下有没有哪里容易错的地方。比如，有没有可能用户把边长和周长搞混了？不过题目里明确说是边长为4的正方形，所以应该没问题。另外，有没有可能用户想问的是周长？不过问题里明确说是面积，所以应该没问题。再检查一下计算，4乘4确实是16，没错。所以答案应该是16。
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; 正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。
+答案：16。
+
+<span class="console-user">[user]</span> &gt;&gt; Translate this Chinese answer back to English. End with `final: &lt;answer&gt;`.
+
+<span class="console-thinking">[thinking]</span>
+Okay, the user wants me to translate a Chinese answer back into English and end with "final: &lt;answer&gt;". The Chinese text says: "正方形的面积计算公式是边长的平方。边长为4的正方形面积为：4 × 4 = 16。答案：16。"
+
+The first sentence translates to: "The formula for the area of a square is the square of its side length." The second part translates to: "The area of a square with a side length of 4 is: 4 × 4 = 16." Finally, "答案：16。" translates to "Answer: 16."
+
+The final answer should end with "final: 16" as requested.
+
+<span class="console-assistant">[assistant]</span> &gt;&gt; The formula for the area of a square is the square of its side length.
+The area of a square with a side length of 4 is: 4 × 4 = 16.
+Answer: 16.
+final: 16</code></pre>
+          <div class="note"><p><strong>Why this matters:</strong> this is a 4B parameter quantized model moving between languages and reasoning steps. That kind of round-trip depends on the model’s prompt handling and tokenizer being correct. It is one reason <a href="grace.html">Grace</a> treats tokenization as a first-class part of the JVM AI stack.</p></div>
+
+          <h2 id="details">What the benchmark records</h2>
+          <p>Each case reports the generated token count, time to first token, total time, tokens per second, and finish reason. A model can produce a correct answer, run out of token budget, or stop normally; the benchmark makes those differences visible instead of flattening them into one success string.</p>
+          <p>Read the detailed <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/benchmarking.md">benchmarking documentation</a> and the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/reasoning_field_support.md">reasoning field notes</a> when you want the implementation details.</p>
+        </article><aside class="toc"><strong>Thinking</strong><a href="#how">What thinking is</a><a href="#enable">Enable it</a><a href="#benchmark">The benchmark</a><a href="#square">Square area</a><a href="#translation">Chinese round-trip</a><a href="#details">Metrics</a></aside></div>
+      </div>
+      <footer class="footer"><span>Thinking / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/core">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

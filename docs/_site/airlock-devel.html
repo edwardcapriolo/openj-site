@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Build and test a Java project in the Airlock Devel workspace.">
+  <title>Airlock Devel — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+       <nav class="nav" aria-label="Primary navigation">
+  <a class="" href="index.html">Start here</a>
+  <a class="" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" >
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="embedded.html">Embedded Java</a>
+    <a class="nav-child " href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="" href="classification.html">Classification</a>
+  <a class="" href="tool-calls.html">Tool Calls</a>
+  <a class="" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="" href="grace.html">Grace</a>
+  <a class="" href="sketches.html">Sketches</a>
+  <a class="" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="" href="jq4.html">JQ4 tensors</a>
+  <a class="" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" open>
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link " href="airlock.html">Overview</a>
+    <a class="nav-child active" href="airlock-devel.html">Devel</a>
+    <a class="nav-child " href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child " href="airlock-browser.html">Browser</a>
+    <a class="nav-child " href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" >
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child " href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child " href="gossip.html">Gossip</a>
+    <a class="nav-child " href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
+
+      <div class="sidebar-foot">OPENJ / AIRLOCK DEVEL</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Airlock / Devel</span><span>Build the project</span></div>
+      <div class="page article-page">
+        <header class="article-head"><div class="eyebrow">Airlock image / 01</div><h1>Build a Java project inside the room.</h1><p class="lede">Devel is the general development image. Mount a project, run the build, inspect the output, and let an agent work against the same files without giving it the whole host.</p><div class="button-row"><a class="button" href="https://hub.docker.com/r/ecapriolo/trusted-opencode/tags?name=0.0.4-devel">Open Devel on Docker Hub ↗</a><a class="button ghost" href="#workflow">Run the workflow</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="workflow">One useful task</h2><p>Give the workspace a Java repository and ask the agent to make a small change, run the tests, and show the result. The value is a repeatable place where the work can happen.</p>
+          <pre><code>docker pull ecapriolo/trusted-opencode:0.0.4-devel
+
+docker run --rm -it \
+  -v "$PWD/demo-service:/workspace" \
+  -w /workspace \
+  ecapriolo/trusted-opencode:0.0.4-devel bash
+
+./mvnw test</code></pre>
+          <div class="example-output"><strong>&gt;&gt; result</strong> the project is built and tested inside the Devel workspace</div>
+          <h2 id="boundary">What crosses the boundary</h2><p>The project directory is explicit. Add a Maven cache or model directory only when the workflow needs one. The agent gets the tools it needs for the task, not an accidental view of every host file.</p>
+          <div class="note"><p><strong>Good first task:</strong> ask the agent to add a test, run <code>./mvnw test</code>, and explain the changed files.</p></div>
+        </article><aside class="toc"><strong>Devel</strong><a href="#workflow">The workflow</a><a href="#boundary">The boundary</a></aside></div>
+      </div>
+      <footer class="footer"><span>Airlock Devel / OpenJ</span><span><a href="airlock.html">Back to Airlock</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

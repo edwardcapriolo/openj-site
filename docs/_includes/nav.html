@@ -1,0 +1,44 @@
+<nav class="nav" aria-label="Primary navigation">
+  <a class="{% if page.name == 'index.html' %}active{% endif %}" href="index.html">Start here</a>
+  <a class="{% if page.name == 'reckoning.html' %}active{% endif %}" href="reckoning.html">Reckoning</a>
+
+  <details class="nav-group" {% if page.name == 'embedded.html' or page.name == 'groovy.html' %}open{% endif %}>
+    <summary>Getting Started <span class="nav-toggle"></span></summary>
+    <a class="nav-child {% if page.name == 'embedded.html' %}active{% endif %}" href="embedded.html">Embedded Java</a>
+    <a class="nav-child {% if page.name == 'groovy.html' %}active{% endif %}" href="groovy.html">Interactive Groovy</a>
+  </details>
+
+  <span class="nav-label">Reckoning Functions</span>
+  <a class="{% if page.name == 'classification.html' %}active{% endif %}" href="classification.html">Classification</a>
+  <a class="{% if page.name == 'tool-calls.html' %}active{% endif %}" href="tool-calls.html">Tool Calls</a>
+  <a class="{% if page.name == 'thinking.html' %}active{% endif %}" href="thinking.html">Thinking</a>
+
+  <span class="nav-label">Reckoning Tools</span>
+  <a class="{% if page.name == 'grace.html' %}active{% endif %}" href="grace.html">Grace</a>
+  <a class="{% if page.name == 'sketches.html' %}active{% endif %}" href="sketches.html">Sketches</a>
+  <a class="{% if page.name == 'antares.html' %}active{% endif %}" href="antares.html">Antares</a>
+  <a href="https://github.com/edwardcapriolo/deliverance/tree/main/nanocode-deliverance">Nanocode ↗</a>
+
+  <span class="nav-label">Reckoning Components</span>
+  <a class="{% if page.name == 'jq4.html' %}active{% endif %}" href="jq4.html">JQ4 tensors</a>
+  <a class="{% if page.name == 'http-api.html' %}active{% endif %}" href="http-api.html">HTTP API</a>
+
+  <details class="nav-group" {% if page.name contains 'airlock' %}open{% endif %}>
+    <summary>Airlock <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link {% if page.name == 'airlock.html' %}active{% endif %}" href="airlock.html">Overview</a>
+    <a class="nav-child {% if page.name == 'airlock-devel.html' %}active{% endif %}" href="airlock-devel.html">Devel</a>
+    <a class="nav-child {% if page.name == 'airlock-cdevel.html' %}active{% endif %}" href="airlock-cdevel.html">CDevel</a>
+    <a class="nav-child {% if page.name == 'airlock-browser.html' %}active{% endif %}" href="airlock-browser.html">Browser</a>
+    <a class="nav-child {% if page.name == 'airlock-cloudops.html' %}active{% endif %}" href="airlock-cloudops.html">CloudOps</a>
+  </details>
+
+  <details class="nav-group" {% if page.name == 'metrics-influx.html' or page.name == 'gossip.html' or page.name == 'dysfx.html' %}open{% endif %}>
+    <summary>Libraries <span class="nav-toggle"></span></summary>
+    <a class="nav-child {% if page.name == 'metrics-influx.html' %}active{% endif %}" href="metrics-influx.html">Metrics Influx</a>
+    <a class="nav-child {% if page.name == 'gossip.html' %}active{% endif %}" href="gossip.html">Gossip</a>
+    <a class="nav-child {% if page.name == 'dysfx.html' %}active{% endif %}" href="dysfx.html">Dysfx</a>
+  </details>
+
+  <a class="{% if page.name == 'journal.html' %}active{% endif %}" href="journal.html">Journal</a>
+  <a href="https://github.com/edwardcapriolo/deliverance">GitHub ↗</a>
+</nav>
