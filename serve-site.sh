@@ -8,9 +8,9 @@ docker rm -f openj-jekyll >/dev/null 2>&1 || true
 
 exec docker run --rm --name openj-jekyll \
   -p "${PORT}:4000" \
-  -v "${ROOT_DIR}/docs:/srv/jekyll" \
+  -v "${ROOT_DIR}:/srv/jekyll" \
   jekyll/jekyll:4.4.1 \
   jekyll serve \
     --host 0.0.0.0 \
-    --source /srv/jekyll \
+    --source /srv/jekyll/docs \
     --destination /srv/jekyll/_site

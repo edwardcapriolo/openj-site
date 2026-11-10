@@ -1,0 +1,65 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Run the Reckoning HTTP server from source or Docker and fetch models into its cache.">
+  <title>Reckoning Server - OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / RECKONING SERVER</div></aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Getting started / HTTP Server</span><span>Serve a local model</span></div>
+      <div class="page article-page">
+        <header class="article-head"><h1>HTTP Server</h1><p class="lede">Reckoning has an HTTP server with industry-standard endpoints.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/del5/tree/main/web">View the source ↗</a><a class="button ghost" href="#start">Get started</a></div></header>
+        <div class="article-layout"><article class="article">
+          <h2 id="start">Getting started</h2>
+          <p>Many clients interface with language models through HTTP services. Reckoning supports familiar endpoints such as <code>/chat/completions</code> and <code>/embeddings</code>.</p>
+          <p>Launch the server from the <a href="https://github.com/edwardcapriolo/deliverance/tree/main/web">source code</a>:</p>
+          <pre><code>cd web
+sh run.sh</code></pre>
+          <p>Or use the Docker image:</p>
+          <pre><code>docker run -p 8085:8080 -it \
+  -v ~/.deliverance:/home/reckoning/.deliverance:ro \
+  -e RECKONING_OPTS=" -Dspring.config.location=file:/reckoning/simple.yaml " \
+  ecapriolo/reckoning:0.0.9</code></pre>
+          <p>The server starts without a model loaded.</p>
+
+          <h2 id="fetch">Fetch the model</h2>
+          <p>From the repository root, use the packaged <code>reckoning.sh</code> helper. It builds the shaded client jar when needed, then runs the client command. See the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/reckoning.sh">script source</a>.</p>
+          <pre><code>./reckoning.sh fetch edwardcapriolo Qwen3-0.6B-JQ4 \
+  --endpoint http://localhost:8085</code></pre>
+          <p>Actual response:</p>
+          <pre><code>{"status":"READY","owner":"edwardcapriolo","name":"Qwen3-0.6B-JQ4","error":null}</code></pre>
+
+          <h2 id="serve">Load it into the server</h2>
+          <p>Fetching puts the files in the cache. Use the same client to load the generation model:</p>
+          <pre><code>./reckoning.sh serve edwardcapriolo Qwen3-0.6B-JQ4 \
+  --type GENERATION \
+  --endpoint http://localhost:8085</code></pre>
+
+          <h2 id="chat">Send a chat completion</h2>
+          <p>Once the model is loaded, send a familiar OpenAI-compatible request:</p>
+          <pre><code>curl -s -X POST http://localhost:8085/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model":"Qwen3-0.6B-JQ4",
+    "messages":[
+      {"role":"user","content":"Tell me one food you like."}
+    ],
+    "temperature":0,
+    "max_tokens":32
+  }'</code></pre>
+          <p>See <a href="http-api.html">HTTP API</a> for request formats and supported options.</p>
+        </article><aside class="toc"><strong>Reckoning Server</strong><a href="#start">Start it</a><a href="#fetch">Fetch a model</a><a href="#serve">Serve it</a><a href="#chat">Chat completion</a></aside></div>
+      </div>
+      <footer class="footer"><span>Reckoning Server / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/web">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

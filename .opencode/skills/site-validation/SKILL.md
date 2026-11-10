@@ -13,9 +13,9 @@ Run from the repository root:
 
 ```sh
 docker run --rm \
-  -v "$PWD/docs:/srv/jekyll" \
+  -v "$PWD:/srv/jekyll" \
   jekyll/jekyll:4.4.1 \
-  jekyll build --source /srv/jekyll --destination /srv/jekyll/_site
+  jekyll build --source /srv/jekyll/docs --destination /srv/jekyll/_site
 ```
 
 ## Serve locally
@@ -26,9 +26,9 @@ Start the Jekyll server with the repository `docs` directory mounted:
 docker rm -f openj-jekyll 2>/dev/null || true
 docker run --rm --name openj-jekyll \
   -p 4000:4000 \
-  -v "$PWD/docs:/srv/jekyll" \
+  -v "$PWD:/srv/jekyll" \
   jekyll/jekyll:4.4.1 \
-  jekyll serve --host 0.0.0.0 --source /srv/jekyll --destination /srv/jekyll/_site
+  jekyll serve --host 0.0.0.0 --source /srv/jekyll/docs --destination /srv/jekyll/_site
 ```
 
 Open `http://localhost:4000/` in Chromium. Keep the container running while inspecting pages, then stop it with:
