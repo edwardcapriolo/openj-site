@@ -1,0 +1,33 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Arizona Cassandra Spark Connector 10.0.1 update mode and Docker-based testing."><title>Cassandra Spark Connector — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / ARIZONA PROJECT</div></aside><main class="main"><div class="topline"><span>OpenJ / Arizona Project</span><span>Cassandra and Spark</span></div><div class="page article-page"><header class="article-head"><h1>Move Spark data into Cassandra.</h1><p class="lede">The Arizona Cassandra Spark Connector connects Spark RDDs, DataFrames, and Structured Streaming jobs to Cassandra. Release 10.0.1 focuses on update-mode streaming and a more reproducible Docker-based test workflow.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/arizona-cassandra-spark-connector">View the source ↗</a><a class="button ghost" href="#update">See Update mode</a></div></header><div class="article-layout"><article class="article"><h2 id="summary">What it does</h2><p>The connector reads Cassandra tables as Spark data and writes Spark data back to Cassandra. It supports DataFrames, RDDs, arbitrary CQL, server-side filtering, replica-aware partitioning, collections, UDTs, vector types, and Scala 2.12/2.13 builds for Spark 3.5.</p><p>Project coordinates use the <code>io.teknek.arizona.spark</code> namespace. The 10.0.1 work is aimed at making streaming updates and integration testing practical.</p>
+
+<h2 id="update">Structured Streaming Update mode</h2><p>Stateful Spark aggregations do not only produce a final answer when a window closes. In Update mode, changed aggregate rows are written on each microbatch. Cassandra receives those rows as upserts while the window is active.</p><pre><code>val metrics = events
+  .withWatermark("event_time", "10 minutes")
+  .groupBy(window(col("event_time"), "10 minutes"), col("content_id"))
+  .count()
+
+metrics.writeStream
+  .format("org.apache.spark.sql.cassandra")
+  .option("keyspace", "streaming_metrics")
+  .option("table", "clickstream_metrics")
+  .option("checkpointLocation", "/var/lib/spark/checkpoints/clickstream-metrics")
+  .outputMode(OutputMode.Update())
+  .start()</code></pre><div class="example-output"><strong>&gt;&gt; writes</strong> changed window aggregates as Cassandra upserts on each microbatch</div><p>The Cassandra primary key must identify the aggregate row, usually the grouping key plus the window start. Later updates replace the earlier value for that key.</p>
+
+<h2 id="testing">Docker-based integration tests</h2><p>The test workflow uses Docker to provide Cassandra and keeps the test environment reproducible. In Airlock, use the nested rootless Docker daemon rather than the host Docker socket.</p><pre><code>export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export PATH="$JAVA_HOME/bin:$PATH"
+
+./sbt/sbt test
+./sbt/sbt it:test</code></pre><p>For a targeted Testcontainers integration test inside Airlock:</p><pre><code>start-rootless-docker env \
+  JAVA_HOME=/usr/lib/jvm/java-17-openjdk \
+  PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH \
+  TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 \
+  ./sbt/sbt \
+  "connector/IntegrationTest/testOnly io.teknek.arizona.spark.connector.sql.CassandraStreamingSinkSpec"</code></pre><div class="note"><p><strong>Why the override:</strong> nested Docker can report a container host address that is unreachable from the test process. The override makes Testcontainers use the local Airlock address.</p></div>
+
+<h2 id="links">Continue into the project</h2><p>Read the <a href="https://github.com/edwardcapriolo/arizona-cassandra-spark-connector/blob/trunk/doc/8_streaming.md">streaming guide</a>, the <a href="https://github.com/edwardcapriolo/arizona-cassandra-spark-connector/blob/trunk/doc/developers.md">developer notes</a>, and the <a href="https://github.com/edwardcapriolo/arizona-cassandra-spark-connector/blob/trunk/CHANGES.txt">change history</a>. The connector is an Apache-licensed fork maintained under the Arizona project namespace.</p></article><aside class="toc"><strong>Cassandra Spark Connector</strong><a href="#summary">What it does</a><a href="#update">Update mode</a><a href="#testing">Docker tests</a><a href="#links">Project links</a></aside></div></div><footer class="footer"><span>Arizona Project / OpenJ</span><span><a href="https://github.com/edwardcapriolo/arizona-cassandra-spark-connector">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer></main></div></body></html>

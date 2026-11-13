@@ -3,7 +3,8 @@ layout: null
 ---
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="LoRA and PEFT adapter support in Reckoning."><title>LoRA / PEFT — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="LoRA and PEFT adapter support in Reckoning."><title>LoRA / PEFT — OpenJ</title><link rel="stylesheet" href="assets/style.css">  {% include umami.html %}
+</head>
 <body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / LORA / PEFT</div></aside><main class="main"><div class="topline"><span>OpenJ / Reckoning / LoRA</span><span>Specialize one base model</span></div><div class="page article-page"><header class="article-head"><h1>LoRA / PEFT adapters</h1><p class="lede">Small trained updates that change what a base model does.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/deliverance/blob/main/core/lora_support.md">Read the support notes ↗</a><a class="button ghost" href="#test">See the test</a></div></header><div class="article-layout"><article class="article">
 <h2 id="what">What Is A LoRA Adapter?</h2>
 <p>A LoRA adapter is not a second model. It is a small set of extra weights, trained separately from the base model, that nudge the base model's behavior in a particular direction when combined with it at inference time.</p>

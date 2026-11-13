@@ -2,7 +2,8 @@
 layout: null
 ---
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Metrics Influx — OpenJ</title><link rel="stylesheet" href="assets/style.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Metrics Influx — OpenJ</title><link rel="stylesheet" href="assets/style.css">  {% include umami.html %}
+</head>
 <body><div class="site-shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a><p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}<div class="sidebar-foot">OPENJ / METRICS INFLUX</div></aside><main class="main"><div class="topline"><span>OpenJ / Libraries / Metrics Influx</span><span>Make JVM metrics useful</span></div><div class="page article-page"><header class="article-head"><h1>Turn JVM activity into a useful time series.</h1><p class="lede">Dropwizard Metrics Influx connects Java and Spark instrumentation to InfluxDB line protocol without forcing each application to invent its own measurement and tag scheme.</p><div class="button-row"><a class="button" href="https://github.com/edwardcapriolo/dropwizardmetrics-influx">View the source ↗</a><a class="button ghost" href="https://central.sonatype.com/artifact/io.teknek.metricsinflux/dropwizardmetrics-influx-core">Maven Central ↗</a></div></header><div class="article-layout"><article class="article"><h2 id="spark">A Spark metric with a stable shape</h2><p>Spark emits names containing application ids, roles, and executor ids. The Spark sink turns those moving parts into a stable measurement plus tags.</p><pre><code>app-20260807163931-0000.1.executor.recordsRead
 
 measurement=executor.recordsRead
