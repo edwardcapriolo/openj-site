@@ -67,6 +67,7 @@ a:hover { color: var(--signal-dark); }
 .nav a[href*="nanocode-deliverance"],
 .nav a[href="jq4.html"],
 .nav a[href="http-api.html"],
+.nav a[href="llmon.html"],
 .nav a[href="airlock.html"] { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
 .nav a[href="classification.html"]:hover,
 .nav a[href="classification.html"].active,
@@ -88,6 +89,8 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="jq4.html"].active,
 .nav a[href="http-api.html"]:hover,
 .nav a[href="http-api.html"].active,
+.nav a[href="llmon.html"]:hover,
+.nav a[href="llmon.html"].active,
 .nav a[href="airlock.html"]:hover,
 .nav a[href="airlock.html"].active { border-left-color: var(--signal); }
 .sidebar-foot { margin-top: auto; color: #747c77; font: .65rem var(--mono); }
@@ -146,6 +149,7 @@ h3 { font-size: 1.2rem; }
 pre { overflow: auto; padding: 1.3rem; background: var(--panel); color: var(--white); font: .78rem/1.65 var(--mono); border-left: 3px solid var(--signal); }
 .example-output { margin: -.8rem 0 1.8rem; padding: .75rem 1rem; background: var(--panel-soft); color: var(--signal); font: .78rem/1.5 var(--mono); border-left: 3px solid var(--signal-dark); }
 .example-output strong { color: #a8aeaa; font-weight: 400; }
+.example-output strong.signal-label { color: var(--signal); }
 code { font-family: var(--mono); font-size: .9em; }
 :not(pre) > code { padding: .12rem .28rem; background: rgba(16,18,20,.08); }
 .note { padding: 1.2rem 1.4rem; margin: 2rem 0; border-left: 3px solid var(--signal-dark); background: rgba(217,255,63,.18); }
