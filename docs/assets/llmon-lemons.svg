@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">When life gives you LLMONs, make better inference</title>
+  <desc id="desc">A bright lemon beside a tensor grid and structured LLMON prompt marks.</desc>
+  <rect width="1200" height="620" fill="#191d1d"/>
+  <g opacity=".2" stroke="#f1f0eb" stroke-width="1">
+    <path d="M610 70h470M610 130h470M610 190h470M610 250h470M610 310h470M610 370h470M610 430h470M610 490h470"/>
+    <path d="M610 70v420M670 70v420M730 70v420M790 70v420M850 70v420M910 70v420M970 70v420M1030 70v420"/>
+  </g>
+  <g fill="#d9ff3f" font-family="monospace" font-size="28">
+    <text x="640" y="116">0.22</text><text x="760" y="176">1.0</text><text x="880" y="236">12.0</text>
+    <text x="700" y="356">Q4</text><text x="940" y="416">GQA</text><text x="640" y="476">LLMON</text>
+  </g>
+  <g transform="translate(250 290) rotate(-18)">
+    <ellipse cx="0" cy="0" rx="145" ry="132" fill="#d9ff3f"/>
+    <ellipse cx="-24" cy="-20" rx="98" ry="78" fill="#efff79" opacity=".65"/>
+    <path d="M-8-116C-16-166 32-188 70-167" fill="none" stroke="#87a900" stroke-width="13" stroke-linecap="round"/>
+    <path d="M38-170C76-205 118-186 126-151C87-143 59-148 38-170Z" fill="#8ab000"/>
+    <path d="M-102 54C-48 72 55 70 112 31" fill="none" stroke="#b4d400" stroke-width="8" opacity=".7"/>
+  </g>
+  <g fill="#f1f0eb" font-family="Arial, sans-serif">
+    <text x="72" y="92" font-size="22" letter-spacing="5">OPENJ / RECKONING</text>
+    <text x="72" y="540" font-size="54" font-weight="700">When life gives you</text>
+    <text x="72" y="592" font-size="54" font-weight="700" fill="#d9ff3f">LLMONs, make better inference.</text>
+  </g>
+</svg>

@@ -1,0 +1,39 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LLMON and Granite model support in Reckoning.">
+  <title>When Life Gives You LLMONs — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / GRANITE / LLMON</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Journal</span><span>Models, prompts, and the JVM</span></div>
+      <div class="page article-page">
+        <header class="article-head" id="top">
+          <div class="eyebrow">Notes from the lab / Granite</div>
+          <h1>When life gives you LLMONs, make better inference.</h1>
+          <p class="lede">A small note on structured prompts and the Granite model that was trained to read them.</p>
+        </header>
+        <div class="article-layout"><article class="article">
+          <figure class="browser-capture"><img src="assets/llmon-lemons.svg" alt="A lemon beside a tensor grid labeled LLMON, Q4, and GQA"><figcaption>Structured prompts are part of the model boundary.</figcaption></figure>
+          <p>LLMON is an interchange representation for separating instructions, documents, requirements, tools, and execution bindings, and <a href="granite.html">Granite Architecture</a> includes a checkpoint trained to consume it. Reckoning makes that format easier to compose with the <a href="llmon.html">LLMON Java DSL</a>, preserves the tokenizer and chat-template path, and publishes a practical <a href="https://huggingface.co/edwardcapriolo/granite-4.1-3b-llmon-preview-JQ4">Granite 4.1 3B LLMON JQ4 model</a>; browse the <a href="supported-models.html">supported-models overview</a> for the wider runtime map.</p>
+        </article><aside class="toc"><strong>LLMON / Granite</strong><a href="#top">The note</a></aside></div>
+      </div>
+      <footer class="footer"><span>LLMON / Granite / OpenJ</span><span><a href="journal.html">Journal</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>
