@@ -1,0 +1,97 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Granite dense, hybrid, and LLMON model support in Reckoning.">
+  <title>Granite — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / GRANITE</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Granite</span><span>Dense, hybrid, and structured prompts</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Model family / Granite</div>
+          <h1>Granite Architecture</h1>
+          <p class="lede">Reckoning supports separate Granite dense and hybrid architectures, including Granite 4.1 LLMON for structured document and tool-aware prompting.</p>
+          <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/granite-4.1-3b-llmon-preview-JQ4">Granite 4.1 LLMON JQ4 ↗</a><a class="button ghost" href="https://huggingface.co/ibm-granite/granite-4.1-3b-llmon-preview">Upstream model ↗</a></div>
+          <div class="code-tabs" data-code-tabs>
+            <div class="code-tabs-nav" role="tablist" aria-label="Run Granite">
+              <button class="code-tab active" type="button" role="tab" aria-selected="true" data-code-tab="cli">CLI</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" data-code-tab="java">Java</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" data-code-tab="groovy">Groovy</button>
+              <a class="code-documentation" href="https://github.com/edwardcapriolo/deliverance/blob/main/docs/models/granite-4.1-3b-llmon-preview/README.md">Documentation ↗</a>
+            </div>
+            <div class="code-panel active" role="tabpanel" data-code-panel="cli"><pre><code>./reckoning.sh fetch edwardcapriolo granite-4.1-3b-llmon-preview-JQ4
+./reckoning.sh serve edwardcapriolo granite-4.1-3b-llmon-preview-JQ4 --type GENERATION</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy CLI code">Copy</button></div>
+            <div class="code-panel" role="tabpanel" data-code-panel="java"><pre><code>import io.teknek.reckoning.model.*;
+import io.teknek.reckoning.safetensors.fetch.*;
+import io.teknek.reckoning.safetensors.prompt.*;
+
+ModelFetcher fetch = new ModelFetcher(
+    "edwardcapriolo", "granite-4.1-3b-llmon-preview-JQ4");
+
+try (AbstractModel model = AutoModelForCausaLm
+        .newBuilder(fetch).build()) {
+    PromptContext prompt = model.promptSupport().orElseThrow()
+        .builder().addUserMessage("Hello").build();
+    Response response = model.generate(prompt);
+    System.out.println(response.responseText);
+}</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy Java code">Copy</button></div>
+            <div class="code-panel" role="tabpanel" data-code-panel="groovy"><pre><code>import io.teknek.reckoning.model.*
+import io.teknek.reckoning.safetensors.fetch.*
+import io.teknek.reckoning.safetensors.prompt.*
+
+def fetch = new ModelFetcher(
+    "edwardcapriolo", "granite-4.1-3b-llmon-preview-JQ4")
+def model = AutoModelForCausaLm.newBuilder(fetch).build()
+def prompt = model.promptSupport().get().builder()
+    .addUserMessage("Hello").build()
+println model.generate(prompt).responseText</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy Groovy code">Copy</button></div>
+          </div>
+        </header>
+        <div class="article-layout"><article class="article">
+          <h2 id="models">Reckoning Q4 Quantized models</h2>
+          <table><thead><tr><th>Checkpoint</th><th>On disk</th><th>Use</th></tr></thead><tbody>
+            <tr><td><a href="https://huggingface.co/edwardcapriolo/granite-4.1-3b-llmon-preview-JQ4"><code>edwardcapriolo/granite-4.1-3b-llmon-preview-JQ4</code></a></td><td>~2.20 GB</td><td>Local Granite 4.1 LLMON generation</td></tr>
+          </tbody></table>
+
+          <div class="project-grid">
+            <div class="project-card"><div class="project-meta"><span>01 / Architecture</span><span>Dense + hybrid</span></div><div><h3>Two Granite shapes.</h3><p><code>granite</code> is the dense decoder architecture. <code>granitemoehybrid</code> is the separate Mamba/MoE hybrid path.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>02 / LLMON</span><span>Structured prompts</span></div><div><h3>Prompt structure is part of the model.</h3><p>Granite 4.1 LLMON is trained for structured instruction, document, requirement, tool, and execution blocks.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>03 / Quantization</span><span>JQ4</span></div><div><h3>Most projection weights fit Q4.</h3><p>Attention and MLP projection matrices are quantized while embeddings, norms, and the output head remain dense.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>04 / Use case</span><span>Grounded extraction</span></div><div><h3>Ask from a document.</h3><p>Compose an instruction, attach a document, constrain the response, and send the rendered LLMON prompt through the raw completion path.</p></div></div>
+          </div>
+
+          <h2 id="notes">Model Notes: Granite 4.1 3B LLMON-preview</h2>
+          <p>Granite 4.1 3B LLMON uses 40 dense decoder layers, 40 query heads, 8 KV heads, a 2560-wide hidden state, and Granite-specific embedding, attention, residual, and logits scaling.</p>
+          <p>LLMON is an interchange representation, not a separate transformer architecture. The <a href="llmon.html">LLMON DSL page</a> shows how to compose the structured prompt without writing reserved-token markup by hand.</p>
+          <p>The published Q4 model was generated from the BF16 checkpoint using Reckoning’s projection-only quantization policy. Its model directory preserves the tokenizer, chat template, configuration, and quantization manifest.</p>
+
+          <h2 id="links">Relevant support</h2>
+          <ul>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/docs/models/granite-4.1-3b-llmon-preview/phase-04-architecture.md">Granite architecture dossier</a></li>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/model/granite/GraniteConfigTest.java">Granite config tests</a></li>
+            <li><a href="https://github.com/generative-computing/llmon">LLMON reference repository</a></li>
+            <li><a href="https://arxiv.org/abs/2603.22519">LLMON language paper</a></li>
+          </ul>
+        </article><aside class="toc"><strong>Granite</strong><a href="#models">Q4 model</a><a href="#notes">Model notes</a><a href="#links">Support</a></aside></div>
+      </div>
+      <footer class="footer"><span>Granite / Reckoning / OpenJ</span><span><a href="supported-models.html">Supported models</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

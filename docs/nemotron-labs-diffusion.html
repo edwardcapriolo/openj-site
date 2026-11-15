@@ -1,0 +1,90 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Nemotron Labs Diffusion autoregressive and speculative generation in Reckoning.">
+  <title>Nemotron Diffusion — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / NEMOTRON DIFFUSION</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Nemotron Diffusion</span><span>More than one way to generate</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Model family / Nemotron Labs Diffusion</div>
+          <h1>One backbone. Three generation modes.</h1>
+          <p class="lede">Nemotron Labs Diffusion can run as a conventional autoregressive model, a masked-block diffusion path, or a linear self-speculation system.</p>
+          <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/Nemotron-Labs-Diffusion-3B-JQ4">Q4 checkpoint ↗</a><a class="button ghost" href="https://github.com/edwardcapriolo/deliverance/blob/main/core/nemotron_labs_diffusion.md">Technical notes ↗</a></div>
+        </header>
+        <div class="article-layout"><article class="article">
+          <h2 id="models">Models</h2>
+          <table><thead><tr><th>Checkpoint</th><th>On disk</th><th>Role</th><th>Status</th></tr></thead><tbody>
+            <tr><td><code>nvidia/Nemotron-Labs-Diffusion-3B-Base</code></td><td>~7.66 GB</td><td>Loader, architecture, and tensor work</td><td>Reference</td></tr>
+            <tr><td><code>nvidia/Nemotron-Labs-Diffusion-3B</code></td><td>See HF files</td><td>Instruction/chat quality target</td><td>Reference</td></tr>
+            <tr><td><a href="https://huggingface.co/edwardcapriolo/Nemotron-Labs-Diffusion-3B-JQ4"><code>edwardcapriolo/Nemotron-Labs-Diffusion-3B-JQ4</code></a></td><td>~3.52 GB</td><td>Practical local benchmark target</td><td>Quantized</td></tr>
+          </tbody></table>
+
+          <h2 id="ar">Autoregressive mode</h2>
+          <p>AR generation is the familiar loop: prefill the prompt, sample one token, append it to the causal context, and repeat. It is useful as a baseline for the shared weights, RoPE, KV cache, and output head.</p>
+          <pre><code>{
+  "generationOptions": {
+    "mode": "ar"
+  }
+}</code></pre>
+          <p>Use the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/benchmarks/run-nemotron-ar-q4-benchmark.sh">AR benchmark</a> to measure ordinary causal generation.</p>
+
+          <h2 id="speculation">Linear self-speculation</h2>
+          <p>The practical Reckoning path is linear self-speculation. It drafts a block without committing it to the KV cache, verifies the draft causally, accepts the matching prefix and bonus token, then repeats.</p>
+          <pre><code>causal prefill
+draft a block without updating committed KV
+verify causally with cache update
+accept matching prefix plus bonus token
+crop cache back to accepted length if needed</code></pre>
+          <p>This path is useful when the model can transfer several accepted tokens per verification step. Profile function evaluations, accepted tokens, transferred tokens, and block lengths rather than looking only at raw generated text.</p>
+
+          <h2 id="diffusion">Diffusion mode</h2>
+          <p>Diffusion generation works over masked blocks. Positions inside an active block can use bidirectional information while denoising, unlike ordinary causal decoding. Reckoning’s current <code>diffusion</code> setting routes to the linear-speculation path.</p>
+          <pre><code>{
+  "generationOptions": {
+    "mode": "linear_spec",
+    "blockLength": 32,
+    "threshold": 0.0
+  }
+}</code></pre>
+
+          <h2 id="internals">Runtime internals</h2>
+          <p>Nemotron uses request-local KVCache2 sessions so AR decoding, block denoising, and verification can share explicit committed and temporary cache state.</p>
+          <p>Its attention path supports causal AR attention, bidirectional denoising blocks, and a causal prefix followed by a bidirectional active block. Packed block attention handles the block score/value work, while optional Q4 output-head and GPU block-projection paths reduce the cost of block logits.</p>
+          <p>TurboQuant can store committed KV blocks in compressed form. It is a memory-capacity feature, not a fully fused TurboQuant attention kernel.</p>
+
+          <h2 id="tests">Relevant tests and benchmarks</h2>
+          <p>The tests cover different risks rather than repeating the same smoke check: configuration parsing protects the mode contract, the base checkpoint IT protects real tensor loading, and the AR/diffusion benchmarks exercise the two generation paths.</p>
+          <ul>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/model/nemotronlabsdiffusion/NemotronLabsDiffusionConfigTest.java"><code>NemotronLabsDiffusionConfigTest</code></a> protects the mode and architecture configuration.</li>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/model/nemotronlabsdiffusion/NemotronLabsDiffusionBaseCheckpointIT.java"><code>NemotronLabsDiffusionBaseCheckpointIT</code></a> exercises the real checkpoint and Q4 paths.</li>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/integration/qwen/NemotronArBenchmarkCasesIT.java"><code>NemotronArBenchmarkCasesIT</code></a> measures ordinary causal generation.</li>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/integration/qwen/NemotronDiffusionBenchmarkCasesIT.java"><code>NemotronDiffusionBenchmarkCasesIT</code></a> measures linear-speculation/diffusion-style generation.</li>
+            <li><a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/integration/qwen/NemotronBenchmarkPromptHeadQuantizationTest.java"><code>NemotronBenchmarkPromptHeadQuantizationTest</code></a> checks prompt/output-head quantization behavior.</li>
+          </ul>
+          <p>Use the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/benchmarks/run-nemotron-diffusion-q4-benchmark.sh">diffusion benchmark</a> for block generation and the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/nemotron_labs_diffusion.md">full support notes</a> for cache modes and profiling counters.</p>
+
+          <div class="note"><p><strong>How to think about it:</strong> AR is the correctness baseline, while linear speculation and diffusion are runtime strategies that trade cache and verification work for transferred tokens.</p></div>
+        </article><aside class="toc"><strong>Nemotron</strong><a href="#models">Models</a><a href="#ar">AR mode</a><a href="#speculation">Self-speculation</a><a href="#diffusion">Diffusion</a><a href="#internals">Internals</a><a href="#tests">Tests</a></aside></div>
+      </div>
+      <footer class="footer"><span>Nemotron Diffusion / Reckoning / OpenJ</span><span><a href="supported-models.html">Supported models</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

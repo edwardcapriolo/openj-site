@@ -1,0 +1,114 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Supported model families, task models, tokenizers, and capabilities in Reckoning.">
+  <title>Supported Models — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / SUPPORTED MODELS</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Supported Models</span><span>Know the runtime surface</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Reckoning / model support</div>
+          <h1>Supported models</h1>
+          <p class="lede">Reckoning is a general-purpose JVM inference engine for local generation, embeddings, classification, tokenization, quantization, and specialized diffusion workflows.</p>
+        </header>
+        <div class="article-layout"><article class="article">
+          <h2 id="generation">Generation architectures</h2>
+          <p>These families are selected from the model’s <code>model_type</code> and routed to family-specific Java implementations.</p>
+          <table>
+            <thead><tr><th>Family</th><th><code>model_type</code></th><th>Examples / variants</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Llama</td><td><code>llama</code></td><td>Llama, TinyLlama</td><td>First-class</td></tr>
+              <tr><td>Qwen2</td><td><code>qwen2</code></td><td>Qwen2 checkpoints</td><td>First-class</td></tr>
+              <tr><td>Qwen3</td><td><code>qwen3</code></td><td>0.6B, 4B</td><td>First-class</td></tr>
+              <tr><td>Qwen3 MoE</td><td><code>qwen3_moe</code></td><td>Qwen3 MoE</td><td>First-class</td></tr>
+              <tr><td>Gemma 2</td><td><code>gemma2</code></td><td>Gemma 2 text</td><td>First-class</td></tr>
+              <tr><td>Gemma 3 Text</td><td><code>gemma3_text</code></td><td>Gemma 3 text</td><td>Help wanted</td></tr>
+              <tr><td>Gemma 4</td><td><code>gemma4</code></td><td>Gemma 4 text</td><td>Help wanted</td></tr>
+              <tr><td>Mistral</td><td><code>mistral</code></td><td>Mistral checkpoints</td><td>First-class</td></tr>
+              <tr><td>Mixtral</td><td><code>mixtral</code></td><td>Mixtral MoE</td><td>Supported</td></tr>
+              <tr><td>GPT-2</td><td><code>gpt2</code></td><td>GPT-2</td><td>Supported</td></tr>
+              <tr><td>Granite Dense</td><td><code>granite</code></td><td>Granite 4.1 3B LLMON</td><td>Active support</td></tr>
+              <tr><td>Granite Hybrid</td><td><code>granitemoehybrid</code></td><td>Granite 4.0 Mamba/MoE</td><td>First-class</td></tr>
+              <tr><td>Diffusion Gemma</td><td><code>diffusion_gemma</code></td><td>Diffusion Gemma</td><td>Specialized</td></tr>
+              <tr><td>Nemotron Labs Diffusion</td><td><code>nemotron_labs_diffusion</code></td><td>Autoregressive and diffusion</td><td>Specialized</td></tr>
+            </tbody>
+          </table>
+          <div class="note"><p><strong>Granite distinction:</strong> dense <code>granite</code> and <code>granitemoehybrid</code> are different architectures. They share some Granite concepts, but their layer implementations and tensor layouts are not interchangeable.</p></div>
+
+          <h2 id="embeddings">Embedding models</h2>
+          <table>
+            <thead><tr><th>Family</th><th>Usage</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>BERT</td><td>Text embeddings</td><td>Supported</td></tr>
+              <tr><td>XLM-RoBERTa</td><td>Text embeddings</td><td>Supported</td></tr>
+              <tr><td>EmbeddingGemma 2</td><td>Text embeddings, pooling, normalization, MRL truncation</td><td>Implemented; registration pending</td></tr>
+              <tr><td>Sentence-transformer / LEAF</td><td>Existing embedding workflow</td><td>Supported with parity limitations</td></tr>
+            </tbody>
+          </table>
+          <p>EmbeddingGemma 2 is currently a <strong>text-only</strong> implementation. The broader checkpoint may contain multimodal metadata, but Reckoning’s implemented path performs text encoding and embedding.</p>
+
+          <h2 id="classification">Classifiers</h2>
+          <p>The documented classification path is intended primarily for encoder families:</p>
+          <ul>
+            <li><strong>BERT:</strong> sequence classification such as jailbreak detection.</li>
+            <li><strong>XLM-RoBERTa:</strong> multilingual language classification.</li>
+          </ul>
+          <p>The shared builder can technically attempt classification for other dispatched families, but those combinations are not generally validated as classifier checkpoints.</p>
+
+          <h2 id="tokenizers">Tokenizers</h2>
+          <p>The Grace tokenizer layer supports model-aware loading of:</p>
+          <ul>
+            <li>BERT and XLM-RoBERTa tokenizers</li>
+            <li>Llama and Qwen-style tokenizers</li>
+            <li>Gemma tokenizers</li>
+            <li>Byte-level BPE and fast tokenizer JSON files</li>
+            <li>Added tokens, special-token metadata, and chat templates</li>
+          </ul>
+          <p>Tokenizer behavior is part of model support. BOS/EOS handling, reserved tokens, and <code>chat_template.jinja</code> can materially change model behavior.</p>
+
+          <h2 id="capabilities">Capabilities</h2>
+          <table>
+            <thead><tr><th>Capability</th><th>Coverage</th></tr></thead>
+            <tbody>
+              <tr><td>JQ4 / Q4 quantization</td><td>Strongest support on causal generation models</td></tr>
+              <tr><td>Tool calls</td><td>Llama, Qwen, Gemma 4, Mixtral, and default parsers</td></tr>
+              <tr><td>Thinking output</td><td>Explicit Qwen3 reasoning parser</td></tr>
+              <tr><td>LLMON</td><td>Granite LLMON prompt DSL and Granite 4.1 support</td></tr>
+              <tr><td>Diffusion generation</td><td>Diffusion Gemma and Nemotron Labs Diffusion</td></tr>
+              <tr><td>Tensor providers</td><td>Native SIMD, Panama, and optional GPU paths</td></tr>
+            </tbody>
+          </table>
+          <p>Tool support is not purely an architecture property. It depends on the checkpoint’s chat template, tokenizer, output format, and tool-call parser. LLMON support is specific to LLMON-trained Granite checkpoints, not every Granite model.</p>
+
+          <h2 id="status">How to read status</h2>
+          <ul>
+            <li><strong>First-class:</strong> normal dispatch, tests, and documented usage.</li>
+            <li><strong>Supported:</strong> working implementation with narrower validation.</li>
+            <li><strong>Specialized:</strong> separate runtime behavior such as diffusion.</li>
+            <li><strong>Active support:</strong> currently being ported or validated.</li>
+            <li><strong>Help wanted:</strong> code exists, but output correctness or parity is not reliable enough to call supported.</li>
+            <li><strong>Implemented; registration pending:</strong> model code exists but automatic dispatch is incomplete.</li>
+          </ul>
+        </article><aside class="toc"><strong>Supported models</strong><a href="#generation">Generation</a><a href="#embeddings">Embeddings</a><a href="#classification">Classifiers</a><a href="#tokenizers">Tokenizers</a><a href="#capabilities">Capabilities</a><a href="#status">Status</a></aside></div>
+      </div>
+      <footer class="footer"><span>Supported models / Reckoning / OpenJ</span><span><a href="reckoning.html">Reckoning</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

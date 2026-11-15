@@ -45,6 +45,7 @@ a:hover { color: var(--signal-dark); }
 .nav a { color: #b6bbb7; text-decoration: none; font: .82rem var(--mono); padding: .42rem 0; border-bottom: 1px solid transparent; }
 .nav a:hover, .nav a.active { color: var(--signal); border-color: var(--signal); }
 .nav > a[href="reckoning.html"] { margin-top: .35rem; color: var(--white); font-size: 1rem; font-weight: 600; }
+.nav > a[href="supported-models.html"] { color: var(--white); font-size: .95rem; font-weight: 600; }
 .nav > a.nav-section-link { margin-top: .2rem; color: var(--white); font-size: .95rem; font-weight: 600; border-bottom: 0; }
 .nav-group { display: grid; gap: .55rem; width: 100%; margin-top: 1.1rem; }
 .nav-group summary { display: flex; justify-content: space-between; cursor: pointer; list-style: none; padding-bottom: .35rem; border-bottom: 1px solid rgba(168,174,170,.2); color: #a8aeaa; font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; }
@@ -60,6 +61,7 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="classification.html"],
 .nav a[href="tool-calls.html"],
 .nav a[href="thinking.html"],
+.nav a[href="lora.html"],
 .nav a[href="antares-cli.html"],
 .nav a[href="grace.html"],
 .nav a[href="sketches.html"],
@@ -75,6 +77,8 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="tool-calls.html"].active,
 .nav a[href="thinking.html"]:hover,
 .nav a[href="thinking.html"].active,
+.nav a[href="lora.html"]:hover,
+.nav a[href="lora.html"].active,
 .nav a[href="antares-cli.html"]:hover,
 .nav a[href="antares-cli.html"].active,
 .nav a[href="grace.html"]:hover,
@@ -116,6 +120,17 @@ h3 { font-size: 1.2rem; }
 .button:hover { color: var(--ink); background: var(--signal); }
 .button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
 .button.ghost:hover { background: var(--ink); color: var(--white); }
+.code-tabs { margin-top: 2rem; border: 1px solid var(--line); background: var(--paper); overflow: hidden; }
+.code-tabs-nav { display: flex; gap: 1.4rem; padding: .8rem 1rem 0; border-bottom: 1px solid var(--line); }
+.code-tab { padding: .45rem 0 .7rem; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); cursor: pointer; font: .72rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.code-tab:hover, .code-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+.code-documentation { margin-left: auto; padding: .45rem 0 .7rem; color: var(--muted); text-decoration: none; font: .72rem var(--mono); }
+.code-documentation:hover { color: var(--ink); }
+.code-panel { display: none; position: relative; }
+.code-panel.active { display: block; }
+.code-panel pre { margin: 0; border: 0; overflow-x: auto; }
+.code-copy { position: absolute; right: 1rem; bottom: 1rem; padding: .45rem .65rem; border: 1px solid rgba(16,18,20,.2); background: rgba(248,248,242,.95); color: var(--ink); cursor: pointer; font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+.code-copy:hover { color: var(--ink); background: var(--signal); }
 
 .section { padding: 4.5rem 0; border-bottom: 1px solid var(--line); }
 .section-heading { display: grid; grid-template-columns: minmax(12rem, .6fr) 1fr; gap: 2rem; margin-bottom: 2.5rem; }
@@ -142,6 +157,10 @@ h3 { font-size: 1.2rem; }
 .article h3 { margin: 2rem 0 .6rem; }
 .article p { color: #414845; }
 .article ul { color: #414845; padding-left: 1.2rem; }
+.article table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: .92rem; }
+.article th, .article td { padding: .8rem .7rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.article th { color: var(--ink); font: 600 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.article td { color: #414845; }
 .toc { font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .toc strong { display: block; margin-bottom: .8rem; }
 .toc a { display: block; color: var(--muted); text-decoration: none; border-left: 1px solid var(--line); padding: .45rem .7rem; }

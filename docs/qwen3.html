@@ -1,0 +1,94 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Qwen3 model support, thinking, tools, quantized checkpoints, and tests in Reckoning.">
+  <title>Qwen3 — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / QWEN3</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Qwen3</span><span>Thinking-capable local generation</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Model family / Qwen3</div>
+          <h1>Qwen3 is a popular model architecture.</h1>
+          <p class="lede">Reckoning supports the Qwen3 architecture across dense and MoE variants, with Q4 checkpoints for practical local generation, thinking output, and a growing tool-use surface.</p>
+          <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4">Qwen3 0.6B JQ4 ↗</a><a class="button ghost" href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4">Qwen3 4B JQ4 ↗</a></div>
+          <div class="code-tabs" data-code-tabs>
+            <div class="code-tabs-nav" role="tablist" aria-label="Run Qwen3">
+              <button class="code-tab active" type="button" role="tab" aria-selected="true" data-code-tab="cli">CLI</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" data-code-tab="java">Java</button>
+              <button class="code-tab" type="button" role="tab" aria-selected="false" data-code-tab="groovy">Groovy</button>
+              <a class="code-documentation" href="https://github.com/edwardcapriolo/deliverance/blob/main/core/qwen3_support.md">Documentation ↗</a>
+            </div>
+            <div class="code-panel active" role="tabpanel" data-code-panel="cli"><pre><code>./reckoning.sh fetch edwardcapriolo Qwen3-4B-JQ4
+./reckoning.sh serve edwardcapriolo Qwen3-4B-JQ4 --type GENERATION</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy CLI code">Copy</button></div>
+            <div class="code-panel" role="tabpanel" data-code-panel="java"><pre><code>import io.teknek.reckoning.model.*;
+import io.teknek.reckoning.safetensors.fetch.*;
+import io.teknek.reckoning.safetensors.prompt.*;
+
+ModelFetcher fetch = new ModelFetcher(
+    "edwardcapriolo", "Qwen3-4B-JQ4");
+
+try (AbstractModel model = AutoModelForCausaLm
+        .newBuilder(fetch).build()) {
+    PromptContext prompt = model.promptSupport().orElseThrow()
+        .builder().addUserMessage("Hello").build();
+    Response response = model.generate(prompt);
+    System.out.println(response.responseText);
+}</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy Java code">Copy</button></div>
+            <div class="code-panel" role="tabpanel" data-code-panel="groovy"><pre><code>import io.teknek.reckoning.model.*
+import io.teknek.reckoning.safetensors.fetch.*
+import io.teknek.reckoning.safetensors.prompt.*
+
+def fetch = new ModelFetcher(
+    "edwardcapriolo", "Qwen3-4B-JQ4")
+
+def model = AutoModelForCausaLm
+    .newBuilder(fetch).build()
+
+def prompt = model.promptSupport().get().builder()
+    .addUserMessage("Hello")
+    .build()
+
+println model.generate(prompt).responseText</code></pre><button class="code-copy" type="button" data-copy-code aria-label="Copy Groovy code">Copy</button></div>
+          </div>
+        </header>
+        <div class="article-layout"><article class="article">
+          <h2 id="models">Reckoning Q4 Quantized models</h2>
+          <table><thead><tr><th>Checkpoint</th><th>On disk</th><th>Use</th></tr></thead><tbody>
+            <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4"><code>edwardcapriolo/Qwen3-0.6B-JQ4</code></a></td><td>~0.91 GB</td><td>Fast tests, embedded use cases, and light chat</td></tr>
+            <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4"><code>edwardcapriolo/Qwen3-4B-JQ4</code></a></td><td>~3.06 GB</td><td>Practical local generation</td></tr>
+          </tbody></table>
+
+          <div class="project-grid">
+            <div class="project-card"><div class="project-meta"><span>01 / Architecture</span><span>Dense + MoE</span></div><div><h3>One family, multiple sizes.</h3><p>Reckoning supports dense Qwen3 models and the Qwen3 MoE architecture through separate model paths.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>02 / Thinking</span><span>Validated</span></div><div><h3>Reasoning is a separate channel.</h3><p>The Qwen3 parser separates <code>&lt;think&gt;</code> reasoning from the visible answer and exposes it through <code>Response.reasoningContent</code>.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>03 / Tools</span><span>Supported</span></div><div><h3>Tool calls work.</h3><p>Reckoning supports Qwen tool-call markup and parsing.</p></div></div>
+            <div class="project-card"><div class="project-meta"><span>04 / Runtime</span><span>Q4 local</span></div><div><h3>Quantized for practical machines.</h3><p>The published JQ4 checkpoints use Reckoning’s quantized projection path with Grace tokenization and KV cache execution.</p></div></div>
+          </div>
+
+          <h2 id="notes">Model Notes: Qwen3-0.6B-JQ4</h2>
+          <p>Qwen3-0.6B-JQ4 is impressive for its size: it can generate meaningful text from a small local footprint. It supports thinking and tool calls, but eliciting those responses can be challenging even when the prompt directly asks for them.</p>
+          <p>The model ultimately has to decide from the prompt that it should call a tool. Smaller models like this may not make that decision reliably every time. The <code>output-head-quantization</code> option is disabled for this model because it causes model collapse and gibberish output.</p>
+        </article><aside class="toc"><strong>Qwen3</strong><a href="#models">Q4 models</a><a href="#notes">Model notes</a></aside></div>
+      </div>
+      <footer class="footer"><span>Qwen3 / Reckoning / OpenJ</span><span><a href="supported-models.html">Supported models</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

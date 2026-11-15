@@ -30,8 +30,8 @@ layout: null
         </header>
         <div class="article-layout"><article class="article">
           <h2 id="format">What LLMON is</h2>
-          <p>Most chat APIs present a conversation as ordinary user and assistant messages. LLMON goes further: it represents instructions, data, requirements, documents, tools, tool results, and execution bindings as explicit blocks.</p>
-          <p>Some models are trained specifically on this representation. Granite 4.1 LLMON is one of them. For that checkpoint, conventional chat formatting is out of distribution; the model expects the structured LLMON form produced by its tokenizer and chat template.</p>
+          <p>Most chat APIs present a conversation as ordinary user and assistant messages. LLMON is an interchange representation that goes further: it represents instructions, data, requirements, documents, tools, tool results, and execution bindings as explicit blocks. It is not a transformer architecture or a separate serving protocol.</p>
+          <p>Some models are trained specifically on this representation. The <a href="https://huggingface.co/edwardcapriolo/granite-4.1-3b-llmon-preview-JQ4">Granite 4.1 LLMON checkpoint</a> is one of them. For that model, conventional chat formatting is out of distribution; the model expects the structured LLMON form produced by its tokenizer and chat template.</p>
           <pre><code>&lt;|open|&gt;instr&lt;|:|&gt;ID&lt;|close|&gt;instruction&lt;|open_end|&gt;
 &lt;|open|&gt;doc&lt;|:|&gt;ID&lt;|close|&gt;
   &lt;|open|&gt;doc&lt;|.|&gt;title&lt;|close|&gt;Project Brief&lt;|open_end|&gt;

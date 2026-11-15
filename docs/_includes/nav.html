@@ -1,6 +1,13 @@
 <nav class="nav" aria-label="Primary navigation">
   <a class="{% if page.name == 'index.html' %}active{% endif %}" href="index.html">Start here</a>
   <a class="{% if page.name == 'reckoning.html' %}active{% endif %}" href="reckoning.html">Reckoning</a>
+  <details class="nav-group" {% if page.name == 'supported-models.html' or page.name == 'qwen3.html' or page.name == 'nemotron-labs-diffusion.html' %}open{% endif %}>
+    <summary>Supported models <span class="nav-toggle"></span></summary>
+    <a class="nav-section-link {% if page.name == 'supported-models.html' %}active{% endif %}" href="supported-models.html">Overview</a>
+    <a class="nav-child {% if page.name == 'qwen3.html' %}active{% endif %}" href="qwen3.html">Qwen3</a>
+    <a class="nav-child {% if page.name == 'granite.html' %}active{% endif %}" href="granite.html">Granite</a>
+    <a class="nav-child {% if page.name == 'nemotron-labs-diffusion.html' %}active{% endif %}" href="nemotron-labs-diffusion.html">Nemotron Diffusion</a>
+  </details>
 
   <details class="nav-group" {% if page.name == 'embedded.html' or page.name == 'groovy.html' %}open{% endif %}>
     <summary>Getting Started <span class="nav-toggle"></span></summary>

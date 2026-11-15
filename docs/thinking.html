@@ -40,9 +40,9 @@ System.out.println(response.reasoningContent);
 System.out.println(response.responseText);</code></pre>
 
           <h2 id="benchmark">A benchmark made for humans to read</h2>
-          <p>Reckoning includes a thinking-benchmark script that runs several problems and records the prompt, visible reasoning, final answer, token count, timing, and finish reason. The point is not only to measure speed. It lets you see what the model actually did.</p>
+          <p>Reckoning includes a <a href="https://github.com/edwardcapriolo/deliverance/blob/main/benchmarks/run-qwen-thinking-smoke-benchmark.sh">thinking-benchmark script</a> that runs several problems and records the prompt, visible reasoning, final answer, token count, timing, and finish reason. The point is not only to measure speed. It lets you see what the model actually did.</p>
 
-          <h2 id="square">Square area</h2>
+          <h2 id="square">Simple geometry problem</h2>
           <p>The first case is deliberately ordinary: a short math problem. The thinking stream works through the formula and checks the arithmetic before the separate answer is returned.</p>
           <pre><code>&lt;think&gt;
 The area of a square is the side multiplied by itself.
@@ -52,7 +52,7 @@ The side is 4, so 4 multiplied by 4 is 16.
 final: 16</code></pre>
           <div class="example-output"><strong>&gt;&gt; result</strong> final: 16</div>
 
-          <h2 id="translation">The impressive case: a Chinese round-trip</h2>
+          <h2 id="translation">English-to-Chinese translation and problem solving</h2>
           <p>For a harder benchmark case, we chose a problem that combines translation and math. This is not one prompt with three labels. It is a full round trip across multiple prompts.</p>
           <pre><code><span class="console-user">[user]</span> &gt;&gt; Translate this question into Chinese only:
 I have a square with a side length of 4. What is its area?
@@ -98,7 +98,7 @@ final: 16</code></pre>
           <h2 id="details">What the benchmark records</h2>
           <p>Each case reports the generated token count, time to first token, total time, tokens per second, and finish reason. A model can produce a correct answer, run out of token budget, or stop normally; the benchmark makes those differences visible instead of flattening them into one success string.</p>
           <p>Read the detailed <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/benchmarking.md">benchmarking documentation</a> and the <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/reasoning_field_support.md">reasoning field notes</a> when you want the implementation details.</p>
-        </article><aside class="toc"><strong>Thinking</strong><a href="#how">What thinking is</a><a href="#enable">Enable it</a><a href="#benchmark">The benchmark</a><a href="#square">Square area</a><a href="#translation">Chinese round-trip</a><a href="#details">Metrics</a></aside></div>
+        </article><aside class="toc"><strong>Thinking</strong><a href="#how">What thinking is</a><a href="#enable">Enable it</a><a href="#benchmark">The benchmark</a><a href="#square">Simple geometry</a><a href="#translation">Translation + problem solving</a><a href="#details">Metrics</a></aside></div>
       </div>
       <footer class="footer"><span>Thinking / Reckoning / OpenJ</span><span><a href="https://github.com/edwardcapriolo/del5/tree/main/core">Source</a> · <a href="index.html">Back to OpenJ</a></span></footer>
     </main>
