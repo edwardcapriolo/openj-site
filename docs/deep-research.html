@@ -1,0 +1,80 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Deep research with a small local model and a few bounded tools.">
+  <title>Deep Research — OpenJ</title>
+  <link rel="stylesheet" href="assets/style.css">
+  {% include umami.html %}
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+      <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>
+      {% include nav.html %}
+      <div class="sidebar-foot">OPENJ / DEEP RESEARCH</div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span>OpenJ / Reckoning / Deep Research</span><span>Small model, real evidence</span></div>
+      <div class="page article-page">
+        <header class="article-head">
+          <div class="eyebrow">Reckoning function / 04</div>
+          <h1>Deep research, running locally.</h1>
+          <p class="lede">A small model can search, inspect, and explain before it answers.</p>
+          <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/Jan-nano-JQ4">Jan-nano JQ4 ↗</a><a class="button ghost" href="https://arxiv.org/abs/2506.22760">Technical report ↗</a></div>
+        </header>
+        <div class="article-layout"><article class="article">
+          <p>Deep research is not a bigger prompt. It is a small local model, a few bounded tools, and a short loop that knows when to look again. Reckoning lets the model search for evidence, choose a source, read a useful window, and then write an answer from what it found.</p>
+
+          <h2 id="loop">The loop</h2>
+          <pre><code>question
+  -> web_search
+  -> choose a source
+  -> scrape a bounded window
+  -> answer with evidence</code></pre>
+          <p>Search returns titles, snippets, and URLs. Scrape caches a page and returns only the next useful window, so a CPU model does not prefill an entire web page.</p>
+
+          <h2 id="example">A real question</h2>
+          <div class="note"><p><strong>Does Reckoning support JQ4?</strong><br>If so, how many bits are used for the quantized values, and how are the scale factors stored?</p></div>
+          <h2 id="finding">What happened</h2>
+          <pre><code>[tool] web_search {"query":"Does Reckoning support JQ4?"}
+
+[results]
+1. reckoning/reckoning-nanocode/run-server-qwen3-4b-jq4-turboquant.sh
+2. reckoning/reckoning-nanocode/run-server-dead-to-rights-qwen3-0.6b-jq4.sh
+3. granite-4.1-3b-llmon-preview-JQ4
+
+[tool] scrape {
+  "url": "https://github.com/edwardcapriolo/reckoning/blob/main/reckoning-nanocode/run-server-qwen3-4b-jq4-turboquant.sh",
+  "offset": 0,
+  "limit": 1000
+}
+
+[answer]
+Reckoning supports JQ4. Quantized values use 4 bits and scale factors are stored as 32-bit floating-point values.</code></pre>
+          <h3>It started uncertain</h3>
+          <p>Jan-nano did not pretend to know what JQ4 was. It recognized that the question required research and chose <code>web_search</code> before answering.</p>
+
+          <h3>It found signal and noise</h3>
+          <p>DuckDuckGo returned Reckoning scripts, a JQ4 model on Hugging Face, a dictionary result, and an unrelated forum page. The model had to decide which result belonged to the question instead of treating every hit as evidence.</p>
+
+          <h3>It narrowed the context</h3>
+          <p>It selected a Reckoning GitHub result and called <code>scrape</code> with <code>offset=0</code> and <code>limit=1000</code>. The fetcher reported a 12,216-character cached page and returned only the first window. That is the practical part of the loop: the model did not prefill the whole page.</p>
+
+          <h3>It found the useful answer, with a visible weakness</h3>
+          <p>The final answer got the central point: JQ4 uses 4-bit quantized values and floating-point scale data. Its attribution was weaker than the answer because it relied on a launch script rather than the authoritative JQ4 format documentation. That is exactly the kind of trace a research tool should make visible.</p>
+
+          <div class="note"><p><strong>The interesting result is the path:</strong> uncertainty, search, noisy evidence, source selection, bounded retrieval, and synthesis. The full <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/jan-nano.out">captured run ↗</a> shows every step.</p></div>
+          <p>Implementation: <a href="https://github.com/edwardcapriolo/deliverance/blob/main/core/src/test/java/io/teknek/reckoning/integration/qwen/JanNanoPromptIT.java">integration test ↗</a>.</p>
+        </article><aside class="toc"><strong>Deep Research</strong><a href="#loop">The loop</a><a href="#example">Question</a><a href="#finding">What happened</a></aside></div>
+      </div>
+      <footer class="footer"><span>Deep Research / Reckoning / OpenJ</span><span><a href="tool-calls.html">Tool Calls</a> · <a href="index.html">Back to OpenJ</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>

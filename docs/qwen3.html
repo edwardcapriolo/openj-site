@@ -26,7 +26,7 @@ layout: null
           <div class="eyebrow">Model family / Qwen3</div>
           <h1>Qwen3 is a popular model architecture.</h1>
           <p class="lede">Reckoning supports the Qwen3 architecture across dense and MoE variants, with Q4 checkpoints for practical local generation, thinking output, and a growing tool-use surface.</p>
-          <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4">Qwen3 0.6B JQ4 ↗</a><a class="button ghost" href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4">Qwen3 4B JQ4 ↗</a></div>
+           <div class="button-row"><a class="button" href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4">Qwen3 0.6B JQ4 ↗</a><a class="button ghost" href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4">Qwen3 4B JQ4 ↗</a><a class="button ghost" href="https://huggingface.co/edwardcapriolo/Jan-nano-JQ4">Jan-nano JQ4 ↗</a></div>
           <div class="code-tabs" data-code-tabs>
             <div class="code-tabs-nav" role="tablist" aria-label="Run Qwen3">
               <button class="code-tab active" type="button" role="tab" aria-selected="true" data-code-tab="cli">CLI</button>
@@ -70,9 +70,12 @@ println model.generate(prompt).responseText</code></pre><button class="code-copy
         <div class="article-layout"><article class="article">
           <h2 id="models">Reckoning Q4 Quantized models</h2>
           <table><thead><tr><th>Checkpoint</th><th>On disk</th><th>Use</th></tr></thead><tbody>
-            <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4"><code>edwardcapriolo/Qwen3-0.6B-JQ4</code></a></td><td>~0.91 GB</td><td>Fast tests, embedded use cases, and light chat</td></tr>
-            <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4"><code>edwardcapriolo/Qwen3-4B-JQ4</code></a></td><td>~3.06 GB</td><td>Practical local generation</td></tr>
-          </tbody></table>
+             <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-0.6B-JQ4"><code>edwardcapriolo/Qwen3-0.6B-JQ4</code></a></td><td>~0.91 GB</td><td>Fast tests, embedded use cases, and light chat</td></tr>
+             <tr><td><a href="https://huggingface.co/edwardcapriolo/Qwen3-4B-JQ4"><code>edwardcapriolo/Qwen3-4B-JQ4</code></a></td><td>~3.06 GB</td><td>Practical local generation</td></tr>
+             <tr><td><a href="https://huggingface.co/edwardcapriolo/Jan-nano-JQ4"><code>edwardcapriolo/Jan-nano-JQ4</code></a></td><td>Q4</td><td>Compact agentic research and MCP-style tool use</td></tr>
+           </tbody></table>
+
+           <p>Jan-nano is a compact 4-billion-parameter agentic model fine-tuned from Qwen3-4B by Menlo Research. It is designed for local deep research and Model Context Protocol tool use, calling external tools such as web search and document retrieval while running on consumer hardware. Read the <a href="https://arxiv.org/abs/2506.22760">Jan-nano technical report ↗</a>.</p>
 
           <div class="project-grid">
             <div class="project-card"><div class="project-meta"><span>01 / Architecture</span><span>Dense + MoE</span></div><div><h3>One family, multiple sizes.</h3><p>Reckoning supports dense Qwen3 models and the Qwen3 MoE architecture through separate model paths.</p></div></div>

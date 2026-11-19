@@ -70,6 +70,7 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="jq4.html"],
 .nav a[href="http-api.html"],
 .nav a[href="llmon.html"],
+.nav a[href="deep-research.html"],
 .nav a[href="airlock.html"] { padding-left: .9rem; border-left: 2px solid rgba(168,174,170,.2); }
 .nav a[href="classification.html"]:hover,
 .nav a[href="classification.html"].active,
@@ -95,6 +96,8 @@ a:hover { color: var(--signal-dark); }
 .nav a[href="http-api.html"].active,
 .nav a[href="llmon.html"]:hover,
 .nav a[href="llmon.html"].active,
+.nav a[href="deep-research.html"]:hover,
+.nav a[href="deep-research.html"].active,
 .nav a[href="airlock.html"]:hover,
 .nav a[href="airlock.html"].active { border-left-color: var(--signal); }
 .sidebar-foot { margin-top: auto; color: #747c77; font: .65rem var(--mono); }
