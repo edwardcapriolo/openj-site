@@ -1,0 +1,55 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Bunsen burner for the Beaker kernel."><title>Bunson — OpenJ</title><link rel="stylesheet" href="assets/style.css">  {% include umami.html %}
+</head>
+<body>
+<div class="site-shell">
+    <aside class="sidebar"><a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-name">OpenJ</span></a>
+        <p>An independent JVM AI lab focused on practical tooling for the Java AI ecosystem.</p>{% include nav.html %}
+        <div class="sidebar-foot">OPENJ / BUNSON</div>
+    </aside>
+    <main class="main">
+        <div class="topline"><span>OpenJ / Getting started / Bunson</span><span>Interactive Groovy with Beaker</span>
+        </div>
+        <div class="page article-page">
+            <header class="article-head"><h1>Bunson: Interactive Groovy with Beaker</h1>
+                <p class="lede">A fork of the Beakerx kernel for Groovy that provides interactive computing
+                    capabilities.</p></header>
+            <div class="article-layout">
+                <article class="article"><p>This is a fork of the <a
+                        href="https://github.com/twosigma/beakerx_kernel_groovy">beakerx_kernel_groovy</a> project, we have
+                freshened up the dependencies and added more internal testing to make it easier to maintain in the future.</p>
+                    <p>The Bunson kernel allows you to:</p>
+                    <ul>
+                        <li>Execute Groovy code interactively in a Jupyter environment</li>
+                        <li>Use the full power of Java libraries including the Reckoning inference engine</li>
+                        <li>Visualize results directly in your notebook</li>
+                        <li>Combine AI tools with traditional JVM development workflows</li>
+                    </ul>
+                    <p>We currently do not publish images to and central repositories (Python/Maven) but building from
+                    source is quick and easy.</p>
+                    <p>To get started:</p>
+                    <ol>
+                        <li>Clone the <a href="https://github.com/edwardcapriolo/beakerx_kernel_base">Bunson Base
+                            repository</a></li>
+                        <li>Run ./gradlew clean install</li>
+                        <li>Clone the <a href="https://github.com/edwardcapriolo/beakerx_kernel_groovy">Bunson Goovy
+                            repository</a></li>
+                        <li>Customize the install_and_run.sh to pick a virtual env path.</li>
+                        <li>Execute the install_and_run.sh. Which should run the build and launch your browser!</li>
+                    </ol>
+
+                    <p>The Bunson kernel is part of OpenJ's effort to provide practical tooling for the Java AI
+                        ecosystem, enabling seamless integration between traditional JVM development and modern AI
+                        capabilities.</p>
+                    <figure class="browser-capture"><img src="bunson_1.png" alt="Selecting a Groovy notebook"></figure>
+                    <figure class="browser-capture"><img src="bunson_2.png" alt="Writing some groovy code"></figure>
+                </article>
+            </div>
+    </main>
+</div>
+</body>
+</html>
